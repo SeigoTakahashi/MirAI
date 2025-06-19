@@ -131,7 +131,7 @@
 
 <!-- モデルパスをJavaScriptに渡す -->
 <script>
-  const modelPath = "{% static 'models' %}";
+  window.MODEL_PATH = "{% static 'models/' %}";
   const isLogin = "{{ user.is_authenticated|lower }}";
 </script>
 <script src="{% static 'js/face-api.min.js' %}"></script>

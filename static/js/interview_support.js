@@ -126,6 +126,7 @@ function volumeAudioProcess(event) {
 
 // 顔認識の処理
 async function startFaceAnalysis() {
+    const modelPath = window.MODEL_PATH || "/static/models/";
     await faceapi.nets.tinyFaceDetector.loadFromUri(modelPath);
     await faceapi.nets.faceExpressionNet.loadFromUri(modelPath);
     await faceapi.nets.faceLandmark68TinyNet.loadFromUri(modelPath);
