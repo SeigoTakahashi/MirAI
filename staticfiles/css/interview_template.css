@@ -1,0 +1,62 @@
+/*テキストの色*/
+.text-black {
+  color: #000!important;
+}
+
+/* 基本的な下線スタイル */
+.nav-tabs .nav-link {
+    border-bottom: 3px solid transparent;
+    transition: border-bottom-color 0.3s ease;
+}
+
+/* アクティブなタブの下線 */
+.nav-tabs .nav-link.active {
+    border-bottom-color: #007bff;
+}
+
+/* ホバー時の下線 */
+.nav-tabs .nav-link:hover {
+    border-bottom-color: #aaa29f;
+}
+
+/* より目立つスタイルの例 */
+.nav-tabs-custom .nav-link {
+    border-bottom: 4px solid transparent;
+    border-radius: 0;
+    position: relative;
+}
+
+.nav-tabs-custom .nav-link.active {
+    border-bottom-color: #3ad3ee;
+    background-color: #f8f9fa;
+}
+
+.nav-tabs-custom .nav-link:hover:not(.active) {
+    border-bottom-color: #07ad39;
+    background-color: #f8f9fa;
+}
+
+/* グラデーション下線の例 */
+.nav-tabs-gradient .nav-link {
+    border-bottom: none;
+    position: relative;
+}
+
+.nav-tabs-gradient .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs-gradient .nav-link.active::after {
+    background: linear-gradient(45deg, #007bff, #28a745);
+}
+
+.nav-tabs-gradient .nav-link:hover:not(.active)::after {
+    background: linear-gradient(45deg, #ffc107, #fd7e14);
+}

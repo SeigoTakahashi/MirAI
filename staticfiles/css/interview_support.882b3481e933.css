@@ -1,0 +1,105 @@
+/* カメラCSS */
+#camera {
+    transform: scaleX(-1)
+}
+#cameraArea {
+    position: relative;
+    max-width: 600px;
+    width: 600px;
+    height: 450px;
+    margin: 0 auto;
+    border: 4px solid gray;
+}
+#camera, #canvas {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block;
+    z-index: 1;
+}
+#canvas {
+    position: absolute;
+    left: 0;
+}
+
+/* チェックバーCSS */
+#smileBar, #volumeBar {
+    position: absolute;
+    width: 40px;
+    height: 480px;
+}
+#smileBar {
+    top: 0;
+    right: -30px;
+    border-right: #dcdcdc solid 6px;
+}
+#volumeBar {
+    top: 0;
+    left: -30px;
+    border-left: #dcdcdc solid 6px;
+}
+#smileIcon, #volumeIcon {
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dcdcdc;
+    text-align: center;
+    font-size: 24px;
+    line-height: 40px;
+    transition: bottom 0.3s;
+}
+#smileIcon {
+    right: -24px;
+}
+#volumeIcon {
+    left: -24px;
+}
+.arrow-left, .arrow-right {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #555;
+    z-index: 2;
+}
+.arrow-left {
+    right: -20px;  /* smileBar の外側（右）に表示 */
+}
+.arrow-right {
+    left: -20px;  /* volumeBar の外側（左）に表示 */
+}
+
+/* ボタンエリアCSS */
+#startBtn, #stopBtn {
+    display: block;
+    margin: 10px auto;
+    color:white;
+}
+#savePoseBtn, #actionBtn, #stopBtn {
+    display: none;
+}
+#BtnArea {
+    margin: 10px auto;
+}
+#postureArea {
+    width: 100%;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+}
+#postureMessage, #question, #transcript, #feedback {
+    text-align: center;
+}
+#controlButtons {
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+
