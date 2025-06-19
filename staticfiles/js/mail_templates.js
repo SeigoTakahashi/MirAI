@@ -7,7 +7,7 @@ document.getElementById('templateSelect')?.addEventListener('change', function (
     if (selectedFile) {
         copyBtn.style.display = "block";  // コピーボタンを表示
         // Ajaxを使って静的ファイルを読み込む
-        fetch(`${MailtemplatesPath}/${selectedFile}.txt`)
+        fetch(`${MailtemplatesPath}${selectedFile}.txt`)
             .then(response => response.text())
             .then(content => {
                 display.value = content;  // ファイルの内容をテキストエリアに表示
