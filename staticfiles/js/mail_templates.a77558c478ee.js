@@ -19,7 +19,7 @@ document.getElementById('templateSelect')?.addEventListener('change', function (
                 autoResizeTextarea(display);
             });
     } else {
-        display.value = "テンプレートの内容がここに表示されます。";
+        display.value = "テンプレートの内容をここに表示";
         copyBtn.style.display = "none";  // コピーボタンを非表示
         autoResizeTextarea(display);
     }
