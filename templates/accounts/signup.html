@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block title %}新規登録{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/google.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<!-- メインコンテンツ -->
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
+        <div class="card-body p-4">
+            <h4 class="card-title text-center mb-4">新規登録</h4>
+
+            <!-- Googleアカウントでの登録を避ける警告 -->
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-circle me-2"></i>
+                Googleアカウントでログインする予定の方は、<strong>同じメールアドレス</strong>で手動登録しないでください。
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <!-- 新規登録フォーム -->
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <!-- Googleログイン -->
+                <a href="{% provider_login_url 'google'%}?next=/" class="google-btn">
+                    <!-- Google の公式 “G” ロゴ（静的ファイルに保存しておくことを推奨） -->
+                    <img src="{% static 'img/googlelogo.png' %}" alt="Google logo" class="google-btn__icon">
+                    <span class="google-btn__text">Googleで登録</span>
+                </a>
+                <!-- フィールドの表示 -->
+                <div class="text-center text-muted mt-2">— または —</div>
+                {% for field in form %}
+                    <div class="mb-3">
+                    <label class="form-label">{{ field.label }}<span class="require-mark">*</span></label>
+                    {{ field }}
+                    <div class="text-danger mt-2">{{ field.errors }}</div>
+                    </div>
+                {% endfor %}
+                <div class="text-danger mt-2">{{ form.non_field_errors }}</div>
+
+                <!-- 新規作成 / パスワードを忘れた場合 -->
+                <div class="d-flex justify-content-between mb-3">
+                    <a></a>
+                    <a href="{% url 'accounts:login' %}" class="fs-9">ログインはこちら</a>
+                </div>
+                <!-- ログインボタン -->
+                <button type="submit" class="btn btn-primary w-100 mb-3">新規登録</button>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

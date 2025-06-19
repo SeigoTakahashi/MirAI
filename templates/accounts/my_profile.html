@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}プロフィール情報{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>プロフィール情報</h3>
+<hr>
+<!-- 説明文 -->
+<p>この情報は他のユーザーに公開されることはありません。</p>
+<!-- フィールドの表示 -->
+<div class="bg-light rounded h-100 p-4">
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.errors %}
+          <div class="text-danger small">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">保存</button>
+  </form>
+</div>
+{% endblock %}

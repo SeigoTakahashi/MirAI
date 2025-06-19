@@ -1,0 +1,59 @@
+#pdf-container {
+    border: 1px solid #ccc;
+    position: relative;
+}
+
+.page-container {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+}
+
+.text-box,
+.image-box {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.text-box {
+    color: black;
+    font-size: 16px;
+    background: transparent;
+    padding: 2px;
+    min-width: 20px;
+    min-height: 20px;
+    white-space: pre-wrap;
+    outline: none;
+}
+
+.text-box.selected,
+.image-box.selected {
+    outline: 2px solid rgb(15, 94, 8);
+}
+
+.image-box {
+    border: 2px solid transparent;
+    min-width: 20px;
+    min-height: 20px;
+    resize: both;
+    overflow: hidden;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+#save-pdf {
+    display: none;
+}

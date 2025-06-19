@@ -1,0 +1,210 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}会社情報{% endblock %}
+{% block information_active %}active{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/company.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- メインコンテンツ -->
+<!-- 戻るボタン -->
+<a type="button" class="btn btn-lg btn-link rounded-pill m-2 text-decoration-none position-absolute fs-sm-9"
+  href="{% url 'information:company_information_list' %}">←戻る </a>
+<!-- タイトル -->
+<div>
+  <h1 class="text-center mt-3">COMPANY</h1>
+  <hr width="30%" class="mx-auto mt-0">
+  <h6 class="text-center">会社情報</h6>
+</div>
+<!-- 会社情報テーブル -->
+<div class="bg-light rounded h-100 p-4">
+  <div class="table-responsive">
+    <table class="createtable">
+      <thead>
+        <tr>
+          <th scope="col" class="fs-sm-9">項目</th>
+          <th scope="col" class="fs-sm-9">情報</th>
+          <th scope="col" class="text-end"><a href="#" id="openModal"><i
+                class="bi bi-plus-square-fill fs-5 p-1"></i></a></th>
+        </tr>
+      </thead>
+      <tbody id="company-info-body">
+        <tr>
+          <th class="fs-sm-9">会社名</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="name">{{ company.name }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="fs-sm-9">取締役代表</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="ceo">{{ company.ceo }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="fs-sm-9">本社所在地</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="address">{{ company.address }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="fs-sm-9">設立年度</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="established_year">{{ company.established_year }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="fs-sm-9">資本金</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="capital">{{ company.capital }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="fs-sm-9">従業員数</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="employees_count">{{ company.employees_count }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="fs-sm-9">事業内容</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="business_content">{{ company.business_content }}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="fs-sm-9">公式HP</th>
+          <td class="fs-sm-9" data-model="company" data-id="{{ company.id }}" data-field="official_website" data-type="url">{{ company.official_website }}</td>
+          <td></td>
+        </tr>
+        <!-- カスタムフィールド -->
+        {% for field in custom_fields %}
+        <tr class="custom-row" data-field-id="{{ field.id }}">
+          <th class="fs-sm-9">{{ field.field_name }}</th>
+          <td class="fs-sm-9" data-model="custom_field" data-id="{{ field.id }}" data-field="field_value">{{ field.field_value }}</td>
+          <td class="text-end">
+            <a class="delete-row"><i class="bi bi-x-circle-fill text-danger fs-6 p-1"></i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="hidden" id="companyId" value="{{ company.id }}">
+  </div>
+  <!-- 会社進捗バー -->
+  <h5 class="my-4">就職活動の進捗</h5>
+
+  <!-- 進捗サークル -->
+  <div class="container">
+    <div class="progress-container">
+      <div class="progress js-progress"></div>
+      {% for step in selected_steps %}
+      <div class="step-circle {% if step in completed_steps or step == current_step %}is-active{% endif %}" data-step-id="{{ step.id }}">
+        {{ forloop.counter }}
+      </div>
+    {% endfor %}
+    </div>
+
+    <!-- 進捗ラベル -->
+    <div class="d-flex justify-content-between">
+      {% for step in selected_steps %}
+      <small class="step-label">{{ step.name }}</small>
+    {% endfor %}
+    </div>
+
+    <!-- 進捗ボタン -->
+    <button class="step-btn" id="prev">戻る</button>
+    <button class="step-btn" id="next">次へ</button>
+
+    <!--ステップリスト-->
+    <div class="dropdown">
+      <button type="button" class="step-btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+        data-bs-auto-close="outside">
+        就活工程選択
+      </button>
+      <div class="dropdown-menu p-4">
+        <div class="mb-3">
+          <div class="form-check">
+            {% for step in all_steps %}
+              <input 
+                type="checkbox" 
+                class="form-check-input" 
+                id="dropdownCheck{{ step.order }}" 
+                data-company-id="{{ company.id }}"
+                data-step-id="{{ step.id }}"
+                {% if step in selected_steps %}checked{% endif %}
+                {% if step in completed_steps %}data-completed="true"{% else %}data-completed="false"{% endif %}>
+              <label class="form-check-label" for="dropdownCheck{{ step.order }}">
+                {{ step.description }}
+              </label>
+              <br>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 会社ごとのイベント -->
+  <h5 class="mt-4">イベント</h6>
+  {% if events %}
+    <table class="table table-sm fontsmall">
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        {% for event in events %}
+        <tr>
+          <td class="td_vertical_align_middle">
+            {{ event.start|date:"Y/m/d" }} <br>&emsp;～{{ event.end|date:"Y/m/d" }}</ul>
+          </td>
+          <td class="td_vertical_align_middle">
+            <br>
+            {% if event.all_day %}
+              終日
+            {% else %}
+              {{ event.start|time:"H:i" }}～{{ event.end|time:"H:i" }}
+            {% endif %}
+          </td>
+          <th class="td_vertical_align_middle"><br class="small">{{ event.title }}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>イベントは登録されていません。<a href="{% url 'dashboard:dashboard' %}">こちらのカレンダーから登録</a>できます。</p>
+  {% endif %}
+
+<!-- 会社情報削除ボタン -->
+<div class="text-end">
+  <button id="delete-company-btn" class="btn btn-danger mt-3">
+    <i class="bi bi-trash"></i> 会社情報を削除
+  </button>
+</div>
+
+<!-- 項目追加モーダル -->
+<div class="modal fade" id="addRowModal" tabindex="-1" aria-labelledby="addRowModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 border-0">
+      <div class="modal-header text-white rounded-top-4">
+        <h5 class="modal-title fw-bold text-white" id="addRowModalLabel">項目の追加</h5><button type="button"
+          class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="閉じる"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="mb-3"><label for="itemNameInput" class="form-label">項目名</label><input type="text"
+            class="form-control" id="itemNameInput" placeholder="例: 業種"></div>
+        <div class="mb-3"><label for="itemValueInput" class="form-label">情報</label><input type="text"
+            class="form-control" id="itemValueInput" placeholder="例: 情報処理サービス業界"></div>
+        <div class="d-flex"><button class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button><button
+            class="btn btn-primary ms-auto" id="addRowBtn">追加</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/company_edit_info.js' %}"></script>
+<script src="{% static 'js/company_info.js' %}"></script>
+<script src="{% static 'js/step_update.js' %}"></script>
+<script>
+  const PROGRESS_ID = "{{ progress.id }}";
+  const CURRENT_ACTIVE_INDEX = "{{ current_step_index }}";
+</script>
+{% endblock %}

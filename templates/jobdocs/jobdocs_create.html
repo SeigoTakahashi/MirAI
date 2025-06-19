@@ -1,0 +1,80 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}履歴書・ES文書作成{% endblock %}
+{% block jobdocs_active %}active{% endblock %}
+{% block nav_jobdocs_create %}active{% endblock %}
+
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>履歴書・ES文書作成</h3>
+<hr>
+<!-- 説明文 -->
+<p>履歴書・ESを作成するためのフォームです。必要な情報を入力してください。</p>
+<!-- ログインユーザーへの案内 -->
+{% if user.is_authenticated %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fa fa-info-circle me-2"></i>
+        <a href="{% url 'accounts:my_profile' %}">プロフィールを設定する</a>ことで、より精度の高い文書が作成されます。<br>
+    　また、<a href="{% url 'information:company_information_list' %}">会社情報を登録する</a>ことで、志望動機などの企業に合わせた文書作成が可能になります。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% else %}
+<!-- 未ログインユーザーへの案内 -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fa fa-exclamation-circle me-2"></i>
+        <a href="{% url 'accounts:login' %}">ログイン</a>すると、登録したプロフィール情報や志望会社情報に基づいて、より精度の高い文書が作成できます。
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+<!-- フィールドの表示 -->
+<div class="bg-light rounded h-100 p-4">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="mb-3">
+            {{ form.theme.label_tag }}<span class="require-mark">*</span>
+            {{ form.theme }}
+            {{ form.theme.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.max_length.label_tag }}<span class="require-mark">*</span>
+            {{ form.max_length }}
+            {{ form.max_length.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.detail.label_tag }}<span class="require-mark">*</span>
+            {{ form.detail }}
+            {{ form.detail.errors }}
+        </div>
+        {% if user.is_authenticated %}
+        <div class="mb-3">
+            {{ form.company.label_tag }}
+            {{ form.company }}
+            {{ form.company.errors }}
+        </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">作成</button>
+    </form>
+
+    <!-- 生成した文書表示エリア -->
+    {% if result %}
+    <div class="my-5">
+        <h4>生成された文書</h4>
+        <hr>
+        <textarea class="form-control auto-resize" rows="1" id="jobdocTextarea">{{ result }}</textarea>
+
+        <!-- 文字数表示 -->
+        <div class="text-end mt-2">
+            <small>文字数: <span id="charCount">0</span>文字</small>
+        </div>
+        <button class="btn btn-secondary my-2 copy-btn" data-clipboard-target="#jobdocTextarea">Copy</button>
+    </div>
+    {% endif %}
+</div>   
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/jobdocs.js' %}"></script>
+{% endblock %}

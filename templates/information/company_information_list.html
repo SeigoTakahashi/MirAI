@@ -1,0 +1,74 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}会社情報{% endblock %}
+{% block information_active %}active{% endblock %}
+
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>会社情報</h3>
+<hr>
+{% if companies %}
+<!-- 説明文 -->
+<p>会社情報をまとめることができます。右下のプラスボタンから追加することができます。</p>
+<!-- 会社情報 -->
+<div class="container-fluid">
+    <div class="row g-4" id="company-list">
+        {% for company in companies %}
+            <div class="col-xl-4 col-md-6 col-sm-12">
+                <a class="bg-light rounded d-flex align-items-center justify-content-between p-4 h-100" role="button"
+                    href="{% url 'information:company_information_detail' company.id %}">
+                    <i class="fa fa-building fa-3x text-primary"></i>
+                    <div class="ms-3">
+                        <h5 class="mb-0">{{ company.name }}</h5>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<!-- 会社情報がない場合 -->
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <i class="fa fa-info-circle me-2"></i>
+    会社情報がありません。右下のプラスボタンから追加することができます。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<!-- 追加ボタン -->
+<div class="btn btn-lg btn-primary btn-lg-square back-to-top">
+    <button type="button" class="btn btn-lg btn-lg-square btn-primary m-2 open-modal" id="openModal"
+        onclick="showmodal()">
+        <i class="fa fa-plus"></i>
+    </button>
+</div>
+
+<!-- モーダル本体 -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg rounded-4 border-0">
+            <div class="modal-header text-white rounded-top-4">
+                <h5 class="modal-title fw-bold text-white" id="eventModalLabel">会社情報追加</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="閉じる"></button>
+            </div>
+            <div class="modal-body p-4" id="eventModalBody">
+                <form action="{% url 'information:company_information_add' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="companyNameInput" class="form-label">会社名</label>
+                        <input type="text" class="form-control" id="companyNameInput" name="name" placeholder="会社名を入力">
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="追加">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/company_add_modal.js' %}"></script>
+{% endblock %}

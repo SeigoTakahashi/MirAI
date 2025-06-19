@@ -1,0 +1,23 @@
+{
+    "builds": [
+        {
+            "src": "SupportApp/wsgi.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb",
+                "runtime": "python3.11",
+                "buildCommand": "bash setup.sh"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "SupportApp/wsgi.py"
+        },
+        {
+            "src": "/static/(.*)",
+            "dest": "SupportApp/static/$1"
+        }
+    ]
+}

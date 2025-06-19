@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}メール構成チェック{% endblock %}
+{% block mail_active %}active{% endblock %}
+{% block nav_mail_structure_check %}active{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>メール構成チェック</h3>
+<hr>
+<!-- 説明文 -->
+<p>メールの構成をチェックするためのフォームです。必要な情報を入力してください。</p>
+<!-- フィールドの表示 -->
+<div class="bg-light rounded h-100 p-4">
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.emailContent.label_tag }}<span class="require-mark">*</span>
+            {{ form.emailContent }}
+            {{ form.emailContent.errors }}
+        </div>
+        <button type="submit" class="btn btn-primary">チェック</button>
+    </form>
+
+    <!-- ポイント表示エリア -->
+    {% if result %}
+    <div class="my-5">
+        <h4>ポイント</h4>
+        <hr>
+        <textarea class="form-control auto-resize" rows="1" id="mailText">{{ result }}</textarea>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

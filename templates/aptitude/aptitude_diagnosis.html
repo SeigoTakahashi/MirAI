@@ -1,0 +1,50 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}会社適性診断{% endblock %}
+{% block aptitude_active %}active{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>会社適性診断</h3>
+<hr>
+{% if profile_not_set %}
+  <!-- プロフィール未設定の警告 -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <i class="fa fa-exclamation-circle me-2"></i>
+      診断を受けるには<a href="{% url 'accounts:my_profile' %}">プロフィールを設定する</a>必要があります。
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% else %}
+  <!-- 説明文 -->
+  <p><a href="{% url 'accounts:my_profile' %}">プロフィール</a>に基づいて、あなたの適性に合った会社を診断します。以下のボタンをクリックして診断を開始してください。</p>
+  <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary mb-4">診断</button>
+  </form>
+
+
+  <!-- 診断結果表示エリア -->
+  {% if result %}
+  <div class="bg-light rounded h-100 p-4">
+    <h4>診断結果</h4>
+    <hr>
+      <div class="row mb-3">
+      <label class="form-label"><strong>適性のある会社タイプ:</strong></label>
+      <textarea class="form-control auto-resize" rows="1" readonly>{{ result.Suitable_Company_Type }}</textarea>
+    </div>
+    <div class="row mb-3">
+      <label class="form-label"><strong>適性のある業界:</strong></label>
+      <textarea class="form-control auto-resize" rows="1" readonly>{{ result.Suitable_Industry }}</textarea>
+    </div>
+    <div class="row mb-3">
+      <label class="form-label"><strong>適性のある職種:</strong></label>
+      <textarea class="form-control auto-resize" rows="1" readonly>{{ result.Suitable_Job_Role }}</textarea>
+    </div>
+    <div class="row mb-3">
+      <label class="form-label"><strong>理想的な会社文化:</strong></label>
+      <textarea class="form-control auto-resize" rows="1" readonly>{{ result.Ideal_Company_Culture }}</textarea>
+    </div>
+  </div>
+  {% endif %}
+{% endif %}
+{% endblock %}

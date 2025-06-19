@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}サービス利用不可{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
+        <div class="col-md-6 text-center p-4">
+            <i class="bi bi-exclamation-diamond display-1 text-warning"></i>
+            <h1 class="display-1 fw-bold">Error</h1>
+            <h3 class="mb-4">文章生成に失敗しました</h3>
+            <p class="mb-4">
+                現在、文章の自動生成サービスが一時的にご利用いただけません。<br>
+                通信状況や外部AIサービスの影響による可能性があります。<br>
+                お手数ですが、時間をおいて再度お試しください。
+            </p>
+            <a class="btn btn-primary rounded-pill py-3 px-5" href="{% url 'dashboard' %}">ホームに戻る</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

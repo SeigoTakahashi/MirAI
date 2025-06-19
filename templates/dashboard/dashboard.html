@@ -1,0 +1,231 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}ダッシュボード{% endblock %}
+{% block dashboard_active %}active{% endblock %}
+
+{% block content %}
+<h3>ダッシュボード</h3>
+<hr>
+<!-- 通知バー -->
+<div class="notification-bar my-3" id="today-events"> 
+    <h6>🔔 本日のイベント</h6>
+    <ul id="today-event-list" class="list-group fontsmall"></ul>
+</div>
+
+<!-- ウィジェット（カレンダー、ToDoリスト） -->
+<div class="row g-4">
+    <!-- 会社進捗 -->
+    <div class="col-sm-12 col-sm-12 col-xl-12">
+        <div class="d-flex flex-column gap-3">
+            <div class="row g-4">
+                {% for progress in progresses %}
+                <div class="col-xl-4 col-md-6 col-sm-12">
+                    <a href="{% url 'information:company_information_detail' progress.company.id %}" class="text-decoration-none text-secondary">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-flag fa-3x text-primary" aria-hidden="true"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">{{ progress.company.name }}</p>
+                                <p class="mb-0"><b>{{ progress.current_step.description|default:"未設定" }}</b></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- カレンダー -->
+    <div class="col-sm-12 col-sm-6 col-xl-6">
+        <div class="h-100 bg-light rounded p-4">
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <!-- ToDoリスト -->
+    <div class="col-sm-12 col-md-6 col-xl-6">
+        <div class="h-100 bg-light rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">To Do List</h6>
+                <a onclick="toggleCompletedVisibility()" id="toggleBtn">完了済みタスクを非表示</a>
+            </div>
+            <div class="d-flex mb-2">
+                <input class="form-control bg-transparent" type="text" placeholder="タスクを入力" id="taskInput">
+                <button type="button" class="btn btn-primary ms-2" onclick="addTodo()">Add</button>
+            </div>
+            <div id="todoList"></div>
+        </div>
+    </div>
+</div>
+
+<!-- モーダルウィンドウ -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg rounded-4 border-0">
+            <div class="modal-header text-white rounded-top-4">
+                <h5 class="modal-title fw-bold text-white" id="eventModalLabel"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="閉じる"></button>
+            </div>
+            <div class="modal-body p-4" id="eventModalBody">
+                <form id="event-form" method="post">
+                    <input type="hidden" id="event-id">
+
+                    <!-- タイトル -->
+                    <div class="mb-3">
+                    <label for="eventTitle" class="form-label">タイトル</label>
+                    <input
+                        type="text"
+                        id="eventTitle"
+                        name="title"
+                        class="form-control"
+                        placeholder="例：説明会、一次面接"
+                        required
+                    >
+                    </div>
+
+                    <!-- 終日チェック -->
+                    <div class="form-check mb-3 form-switch">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        value="1"
+                        id="all-day"
+                        name="all_day"
+                        checked
+                    >
+                    <label class="form-check-label" for="all-day">
+                        終日
+                    </label>
+                    </div>
+
+                    <!-- 開始日時 -->
+                    <div class="mb-3">
+                    <label for="event-start" class="form-label">開始</label>
+                    <input
+                        type="date"
+                        id="event-start"
+                        name="start"
+                        class="form-control w-100"
+                        required
+                    >
+                    </div>
+
+                    <!-- 終了日時 -->
+                    <div class="mb-3">
+                    <label for="event-end" class="form-label">終了</label>
+                    <input
+                        type="date"
+                        id="event-end"
+                        name="end"
+                        class="form-control w-100"
+                    >
+                    </div>
+
+
+                    <!-- 詳細 -->
+                    <div class="mb-3">
+                    <label for="event-description" class="form-label">詳細</label>
+                    <textarea
+                        id="event-description"
+                        name="description"
+                        class="form-control"
+                        rows="4"
+                        placeholder="予定の詳細を入力"
+                    ></textarea>
+                    </div>
+
+                    <!-- 会社選択 -->
+                    <div class="mb-3">
+                    <label for="event-company" class="form-label">会社</label>
+                    <select name="company" id="event-company" class="form-select">
+                        <option value="">--- 選択しない ---</option>
+                        {% for company in request.user.companies.all %}
+                            <option value="{{ company.id }}">{{ company.name }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+
+                    <!-- 色選択 -->
+                    <div class="mb-3">
+                        <label class="form-label">色を選択</label>
+                        <div class="d-flex flex-wrap gap-2">
+    
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-red" value="#e74c3c" required>
+                            <label class="btn rounded-circle p-0" for="color-red"
+                                    style="width: 32px; height: 32px; background-color: #e74c3c; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-blue" value="#3788d8" required>
+                            <label class="btn rounded-circle p-0" for="color-blue"
+                                    style="width: 32px; height: 32px; background-color: #3788d8; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-green" value="#2ecc71" required>
+                            <label class="btn rounded-circle p-0" for="color-green"
+                                    style="width: 32px; height: 32px; background-color: #2ecc71; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-yellow" value="#f1c40f" required>
+                            <label class="btn rounded-circle p-0" for="color-yellow"
+                                    style="width: 32px; height: 32px; background-color: #f1c40f; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-purple" value="#9b59b6" required>
+                            <label class="btn rounded-circle p-0" for="color-purple"
+                                    style="width: 32px; height: 32px; background-color: #9b59b6; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-orange" value="#e67e22" required>
+                            <label class="btn rounded-circle p-0" for="color-orange"
+                                    style="width: 32px; height: 32px; background-color: #e67e22; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-pink" value="#fd79a8" required>
+                            <label class="btn rounded-circle p-0" for="color-pink"
+                                    style="width: 32px; height: 32px; background-color: #fd79a8; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                            <input class="btn-check" type="radio" name="color" id="color-gray" value="#95a5a6" required>
+                            <label class="btn rounded-circle p-0" for="color-gray"
+                                    style="width: 32px; height: 32px; background-color: #95a5a6; border: 2px solid #ccc;">
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="error-message" class="text-danger mb-2"></div>
+
+                    <!-- ボタン -->
+                    <div class="d-flex justify-content-end">
+                    <button type="button" id="delete-event-btn" class="btn btn-danger me-auto" style="display:none;">削除</button>
+                    <button type="button" id="cancelButton" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/todo.js' %}"></script>
+{% endblock %}

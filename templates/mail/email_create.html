@@ -1,0 +1,58 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}メール文書作成{% endblock %}
+{% block mail_active %}active{% endblock %}
+{% block nav_mail_create %}active{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>メール文書作成</h3>
+<hr>
+<!-- 説明文 -->
+<p>メール文書を作成するためのフォームです。必要な情報を入力してください。</p>
+<!-- フィールドの表示 -->
+<div class="bg-light rounded h-100 p-4">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="mb-3">
+            {{ form.recipient.label_tag }}<span class="require-mark">*</span>
+            {{ form.recipient }}
+            {{ form.recipient.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.company.label_tag }}<span class="require-mark">*</span>
+            {{ form.company }}
+            {{ form.company.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.sender_name.label_tag }}<span class="require-mark">*</span>
+            {{ form.sender_name }}
+            {{ form.sender_name.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.subject.label_tag }}
+            {{ form.subject }}
+            {{ form.subject.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.content.label_tag }}<span class="require-mark">*</span>
+            {{ form.content }}
+            {{ form.content.errors }}
+        </div>
+        <button type="submit" class="btn btn-primary">作成</button>
+    </form>
+
+    <!-- メール文表示エリア -->
+    {% if result %}
+    <div class="my-5">
+        <h4>生成されたメール文</h4>
+        <hr>
+        <textarea class="form-control auto-resize" rows="1" id="mailText">{{ result }}</textarea>
+        <button class="btn btn-secondary my-2 copy-btn" data-clipboard-target="#mailText">Copy</button>
+    </div>
+    {% endif %}
+</div>   
+    
+
+{% endblock %}

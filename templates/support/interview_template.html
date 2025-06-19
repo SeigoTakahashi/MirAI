@@ -1,0 +1,298 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}質問テンプレート{% endblock %}
+{% block interview_active %}active{% endblock %}
+{% block nav_interview_template %}active{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/interview_template.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>質問テンプレート</h3>
+<hr>
+<!-- 説明文 -->
+<p>以下は面接でよく聞かれる質問のテンプレートです。各タブをクリックして、質問内容を確認してください。</p>
+<!-- 質問内容の表示 -->
+<div class="col-sm-12 col-xl-12">
+    <!--id変えてく-->
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list"
+                type="button" role="tab" aria-controls="nav-list" aria-selected="true">一覧</button>
+            <button class="nav-link" id="nav-pr-tab" data-bs-toggle="tab" data-bs-target="#nav-pr" type="button"
+                role="tab" aria-controls="nav-pr" aria-selected="false">自己PR </button>
+            <button class="nav-link" id="nav-motivation-tab" data-bs-toggle="tab" data-bs-target="#nav-motivation"
+                type="button" role="tab" aria-controls="nav-motivation" aria-selected="false">志望動機</button>
+            <button class="nav-link" id="nav-experience-tab" data-bs-toggle="tab" data-bs-target="#nav-experience"
+                type="button" role="tab" aria-controls="nav-experience" aria-selected="false">ガクチカ</button>
+            <button class="nav-link" id="nav-values-tab" data-bs-toggle="tab" data-bs-target="#nav-values"
+                type="button" role="tab" aria-controls="nav-values" aria-selected="false">チーム</button>
+            <button class="nav-link" id="nav-reversequestion-tab" data-bs-toggle="tab"
+                data-bs-target="#nav-reversequestion" type="button" role="tab" aria-controls="nav-reversequestion"
+                aria-selected="false">逆質問</button>
+            <button class="nav-link" id="nav-others-tab" data-bs-toggle="tab" data-bs-target="#nav-others"
+                type="button" role="tab" aria-controls="nav-others" aria-selected="false">その他</button>
+        </div>
+    </nav>
+    <div class="tab-content pt-3" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
+                簡単に自己紹介をお願いします。
+            <hr>
+            あなたの性格を一言で表すと？
+            <hr>
+            あなたの強みと弱みを教えてください。
+            <hr>
+            友人からはどのような性格だと言われますか？
+            <hr>
+            自分を動物に例えると何ですか？理由も教えてください。
+            <hr>
+            就職活動で大切にしていることは何ですか？
+            <hr>
+            普段どのように時間を使っていますか？
+            <hr>
+            趣味や特技は何ですか？
+            <hr>
+            最近感動したことは何ですか？
+            <hr>
+            自分を3つのキーワードで表すと？
+            <hr>
+            なぜこの業界を志望したのですか？
+            <hr>
+            なぜこの職種を選んだのですか？
+            <hr>
+            弊社を志望した理由を教えてください。
+            <hr>
+            同業他社ではなく、なぜ弊社なのですか？
+            <hr>
+            どのような部分に弊社の魅力を感じましたか？
+            <hr>
+            志望動機を一言でまとめると？
+            <hr>
+            入社後にやってみたい仕事は？
+            <hr>
+            あなたのキャリアビジョンと弊社の接点は？
+            <hr>
+            弊社の理念・ミッションについてどう感じますか？
+            <hr>
+            志望動機を、あなたの経験に絡めて教えてください。
+            <hr>
+            学生時代に最も力を入れたことは？
+            <hr>
+            なぜそれに取り組もうと思ったのですか？
+            <hr>
+            困難をどう乗り越えましたか？
+            <hr>
+            その経験から何を学びましたか？
+            <hr>
+            チームで取り組んだ経験はありますか？
+            <hr>
+            達成感を得た瞬間はどんなときでしたか？
+            <hr>
+            その活動の中で工夫した点は？
+            <hr>
+            学業以外で注力した活動はありますか？
+            <hr>
+            結果より過程で大事にしたことは？
+            <hr>
+            その経験は今後どう活かせそうですか？
+            <hr>
+            チームでの役割経験を教えてください。
+            <hr>
+            意見の衝突があった時の対処法は？
+            <hr>
+            リーダーを経験したことはありますか？
+            <hr>
+            チームメンバーとして意識していたことは？
+            <hr>
+            成功するチームの条件は何だと思いますか？
+            <hr>
+            チームで成果を出すために心がけたことは？
+            <hr>
+            自分とは価値観が違う人とどう接しますか？
+            <hr>
+            チームの雰囲気を良くするためにしたことは？
+            <hr>
+            周囲にサポートされた経験を教えてください。
+            <hr>
+            チームで失敗した経験とその反省は？
+            <hr>
+            入社後の具体的なキャリアパスを教えてください。
+            <hr>
+            貴社で活躍している人の共通点は何ですか？
+            <hr>
+            チームや部署の雰囲気はどのような感じですか？
+            <hr>
+            配属先はどのように決まるのでしょうか？
+            <hr>
+            若手社員が挑戦できる機会はありますか？
+            <hr>
+            新卒に期待することは何ですか？
+            <hr>
+            貴社の今後のビジョンについて教えてください。
+            <hr>
+            仕事のやりがいや厳しさについて教えてください。
+            <hr>
+            評価制度や成長支援について教えてください。
+            <hr>
+            入社までに準備しておくべきことはありますか？
+            <hr>
+            最近気になったニュースは？
+            <hr>
+            ストレスを感じた時の対処法は？
+            <hr>
+            あなたの失敗経験とそこから学んだことは？
+            <hr>
+            5年後、10年後の自分をどう描いていますか？
+            <hr>
+            最も大きな決断をした経験は何ですか？
+            <hr>
+            予想外の出来事にどう対応しましたか？
+            <hr>
+            人に誤解された経験とその対応は？
+            <hr>
+            嫌な仕事でも前向きに取り組むにはどうしますか？
+            <hr>
+            あなたが理想とする社会人像とは？
+            <hr>
+            仕事とプライベートのバランスについてどう考えますか？
+            <hr>
+        </div>
+        <div class="tab-pane fade" id="nav-pr" role="tabpanel" aria-labelledby="nav-pr-tab">
+            簡単に自己紹介をお願いします。
+            <hr>
+            あなたの性格を一言で表すと？
+            <hr>
+            あなたの強みと弱みを教えてください。
+            <hr>
+            友人からはどのような性格だと言われますか？
+            <hr>
+            自分を動物に例えると何ですか？理由も教えてください。
+            <hr>
+            就職活動で大切にしていることは何ですか？
+            <hr>
+            普段どのように時間を使っていますか？
+            <hr>
+            趣味や特技は何ですか？
+            <hr>
+            最近感動したことは何ですか？
+            <hr>
+            自分を3つのキーワードで表すと？
+            <hr>
+        </div>
+        <div class="tab-pane fade" id="nav-motivation" role="tabpanel" aria-labelledby="nav-motivation-tab">
+            なぜこの業界を志望したのですか？
+            <hr>
+            なぜこの職種を選んだのですか？
+            <hr>
+            弊社を志望した理由を教えてください。
+            <hr>
+            同業他社ではなく、なぜ弊社なのですか？
+            <hr>
+            どのような部分に弊社の魅力を感じましたか？
+            <hr>
+            志望動機を一言でまとめると？
+            <hr>
+            入社後にやってみたい仕事は？
+            <hr>
+            あなたのキャリアビジョンと弊社の接点は？
+            <hr>
+            弊社の理念・ミッションについてどう感じますか？
+            <hr>
+            志望動機を、あなたの経験に絡めて教えてください。
+            <hr>
+        </div>
+        <div class="tab-pane fade" id="nav-experience" role="tabpanel" aria-labelledby="nav-experience-tab">
+            学生時代に最も力を入れたことは？
+            <hr>
+            なぜそれに取り組もうと思ったのですか？
+            <hr>
+            困難をどう乗り越えましたか？
+            <hr>
+            その経験から何を学びましたか？
+            <hr>
+            チームで取り組んだ経験はありますか？
+            <hr>
+            達成感を得た瞬間はどんなときでしたか？
+            <hr>
+            その活動の中で工夫した点は？
+            <hr>
+            学業以外で注力した活動はありますか？
+            <hr>
+            結果より過程で大事にしたことは？
+            <hr>
+            その経験は今後どう活かせそうですか？
+            <hr>
+        </div>
+        <div class="tab-pane fade" id="nav-values" role="tabpanel" aria-labelledby="nav-values-tab">
+            チームでの役割経験を教えてください。
+            <hr>
+            意見の衝突があった時の対処法は？
+            <hr>
+            リーダーを経験したことはありますか？
+            <hr>
+            チームメンバーとして意識していたことは？
+            <hr>
+            成功するチームの条件は何だと思いますか？
+            <hr>
+            チームで成果を出すために心がけたことは？
+            <hr>
+            自分とは価値観が違う人とどう接しますか？
+            <hr>
+            チームの雰囲気を良くするためにしたことは？
+            <hr>
+            周囲にサポートされた経験を教えてください。
+            <hr>
+            チームで失敗した経験とその反省は？
+            <hr>
+        </div>
+        <div class="tab-pane fade" id="nav-reversequestion" role="tabpanel"
+            aria-labelledby="nav-reversequestion-tab">
+            入社後の具体的なキャリアパスを教えてください。
+            <hr>
+            貴社で活躍している人の共通点は何ですか？
+            <hr>
+            チームや部署の雰囲気はどのような感じですか？
+            <hr>
+            配属先はどのように決まるのでしょうか？
+            <hr>
+            若手社員が挑戦できる機会はありますか？
+            <hr>
+            新卒に期待することは何ですか？
+            <hr>
+            貴社の今後のビジョンについて教えてください。
+            <hr>
+            仕事のやりがいや厳しさについて教えてください。
+            <hr>
+            評価制度や成長支援について教えてください。
+            <hr>
+            入社までに準備しておくべきことはありますか？
+            <hr>
+        </div>
+        <div class="tab-pane fade" id="nav-others" role="tabpanel" aria-labelledby="nav-others-tab">
+            最近気になったニュースは？
+            <hr>
+            ストレスを感じた時の対処法は？
+            <hr>
+            あなたの失敗経験とそこから学んだことは？
+            <hr>
+            5年後、10年後の自分をどう描いていますか？
+            <hr>
+            最も大きな決断をした経験は何ですか？
+            <hr>
+            予想外の出来事にどう対応しましたか？
+            <hr>
+            人に誤解された経験とその対応は？
+            <hr>
+            嫌な仕事でも前向きに取り組むにはどうしますか？
+            <hr>
+            あなたが理想とする社会人像とは？
+            <hr>
+            仕事とプライベートのバランスについてどう考えますか？
+            <hr>
+        </div>
+    </div>
+</div>
+    
+
+{% endblock %}

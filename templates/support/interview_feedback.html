@@ -1,0 +1,67 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}面接履歴{% endblock %}
+{% block interview_active %}active{% endblock %}
+{% block nav_feedback %}active{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>面接履歴</h3>
+<hr>
+<!-- 説明文 -->
+<!-- 質問、回答、講評の表示 -->
+{% if not empty %}
+  <p>以下は過去の面接履歴です。</p>
+  <!-- 検索フォーム -->
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-md-10">
+      <input type="text" name="q" class="form-control" placeholder="質問やあなたの回答、講評から検索"
+            value="{{ request.GET.q }}">
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary w-100">
+        <i class="fas fa-search me-1"></i> 検索
+      </button>
+    </div>
+  </form>
+  <!-- 面接履歴の表示 -->
+  {% for history in interview_histories %}
+    <div class="row my-3">
+      <div class="col-md-4 mb-2">
+        <div class="card h-100">
+          <div class="card-body">
+            <h6 class="card-title">質問</h6>
+            <p class="card-text text-start">{{ history.question }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-2">
+        <div class="card h-100">
+          <div class="card-body">
+            <h6 class="card-title">あなたの回答</h6>
+            <p class="card-text text-start">{{ history.answer }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-2">
+        <div class="card h-100">
+          <div class="card-body">
+            <h6 class="card-title">講評</h6>
+            <p class="card-text text-start">{{ history.feedback }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+  {% endfor %}
+{% else %}
+  <!-- 面接履歴がない場合のメッセージ -->
+  <div class="alert alert-info my-3  alert-dismissible fade show" role="alert">
+    <i class="fa fa-info-circle me-2"></i>
+    まだ面接履歴がありません。<a href="{% url 'support:interview_support' %}">面接模擬練習</a>を始めることで、履歴が追加されます。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
+
+
+{% endblock %}

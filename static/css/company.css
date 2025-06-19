@@ -1,0 +1,115 @@
+/* 進捗バーCSS */
+:root {
+  --line-border-fill: #00CC99;
+  --line-border-empty: #bdc3c7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+}
+
+.progress-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 30px;
+  max-width: 100%;
+  width: 100%;
+}
+
+.progress-container::before {
+  content: '';
+  background-color: var(--line-border-empty);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 100%;
+  z-index: -1;
+}
+
+.progress {
+  background-color: var(--line-border-fill);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 5px;
+  width: 0%;
+  z-index: 0;
+  transition: 0.6s ease-in-out;
+}
+
+.step-circle {
+  background-color: #fff;
+  color: #999;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--line-border-empty);
+  transition: 0.6s ease-in-out;
+  z-index: 1;
+}
+
+.step-circle.is-active {
+  border-color: var(--line-border-fill);
+  color: var(--line-border-fill);
+}
+
+.step-btn {
+  background-color: #000;
+  color: #fff;
+  border: 0;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0.5rem 2rem;
+  margin: 5px;
+  font-size: 14px;
+}
+
+.step-btn:active {
+  transform: scale(0.98);
+  color: #000;
+}
+
+.step-btn:focus {
+  outline: 0;
+}
+
+.step-btn:disabled {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.step-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+@media screen and (max-width: 480px) {
+  .fontsmall{
+    font-size: 11.4px;
+  }  
+}
+
+.td_vertical_align_middle {
+  vertical-align: middle;
+}

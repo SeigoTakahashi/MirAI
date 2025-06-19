@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block title %}ログイン{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/google.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<!-- メインコンテンツ -->
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
+        <div class="card-body p-4">
+            <h4 class="card-title text-center mb-4">ログイン</h4>
+            <!-- フィールドの表示 -->
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                    <label class="form-label">{{ field.label }}<span class="require-mark">*</span></label>
+                    {{ field }}
+                    <div class="text-danger mt-2">{{ field.errors }}</div>
+                    </div>
+                {% endfor %}
+                <div class="text-danger mt-2">{{ form.non_field_errors }}</div>
+                <!-- 新規作成 / パスワードを忘れた場合 -->
+                <div class="d-flex justify-content-between mb-3">
+                    <!-- <a href="{% url 'accounts:password_reset' %}" class="fs-9">パスワードを忘れた場合</a> -->
+                     <a></a>
+                    <a href="{% url 'accounts:signup' %}" class="fs-9">新規登録はこちら</a>
+                </div>
+                <!-- ログインボタン -->
+                <button type="submit" class="btn btn-primary w-100 mb-3">ログイン</button>
+                <div class="text-center text-muted mb-2">— または —</div>
+                <!-- Googleログイン -->
+                <a href="{% provider_login_url 'google'%}?next=/" class="google-btn">
+                    <!-- Google の公式 “G” ロゴ（静的ファイルに保存しておくことを推奨） -->
+                    <img src="{% static 'img/googlelogo.png' %}" alt="Google logo" class="google-btn__icon">
+                    <span class="google-btn__text">Googleでログイン</span>
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

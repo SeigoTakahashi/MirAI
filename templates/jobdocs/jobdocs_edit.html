@@ -1,0 +1,59 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}履歴書PDF編集{% endblock %}
+{% block jobdocs_active %}active{% endblock %}
+{% block nav_jobdocs_edit %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/jobdocs_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>履歴書PDF編集</h3>
+<hr>
+
+<!-- 説明文 -->
+<p>PDFファイルを読み込んで編集したり、画像を追加したりできます。</p>
+
+<!-- 注意事項 -->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <i class="fa fa-exclamation-circle me-2"></i>
+  画面を<strong>最大化</strong>してから操作してください。
+    画面サイズが小さいと、PDFの表示や編集が正しく行えない場合があります。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<!-- 入力フォーム -->
+<div class="mb-3">
+    <label class="form-label"><b>PDFを読み込む:</b></label>
+    <input type="file" class="form-control" id="upload-pdf" accept="application/pdf">
+</div>
+
+<div class="mb-3">
+    <label class="form-label"><b>画像を追加:</b></label>
+    <input type="file" class="form-control" id="upload-image" accept="image/*">
+</div>
+
+<div class="mb-3 d-flex align-items-center gap-2">
+    <label for="font-size" class="form-label mb-0"><b>文字サイズ:</b></label>
+    <input type="number" class="form-control" id="font-size" value="16" min="6" max="100" style="width: 80px;">
+    <span>px</span>
+</div>
+
+<button class="btn btn-primary mb-3" id="save-pdf"><i class="far fa-save me-2"></i>PDFとして保存</button>
+
+<!-- PDF表示領域 -->
+<div id="pdf-container" class="border p-2 bg-light"></div>
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="{% static 'js/jobdocs_edit.js' %}"></script>
+
+{% endblock %}
+

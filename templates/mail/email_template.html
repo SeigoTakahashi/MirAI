@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}メールテンプレート{% endblock %}
+{% block mail_active %}active{% endblock %}
+{% block nav_mail_template %}active{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>メールテンプレート</h3>
+<hr>
+<!-- 説明文 -->
+<p>メールテンプレートを選択してください。選択したテンプレートの内容が下に表示されます。</p>
+<!-- フィールドの表示 -->
+<div class="bg-light rounded h-100 p-4">
+    <select id="templateSelect" class="form-select">
+        <option value="">テンプレートを選択</option>
+        <option value="adjustment">【調整系】</option>
+        <option value="apology">【謝罪・欠席】</option>
+        <option value="thanks">【お礼】</option>
+        <option value="question">【質問】</option>
+        <option value="result_reply">【結果返信】</option>
+        <option value="self_application">【自己応募】</option>
+        <option value="document_submission">【書類提出】</option>
+        <option value="reply">【返信】</option>
+    </select>
+
+    <!-- テンプレート表示エリア -->
+    <div class="my-3">
+        <textarea class="form-control auto-resize" name="content" rows="1" id="templateDisplay">テンプレートの内容がここに表示されます</textarea>
+        <button class="btn btn-secondary mt-2 copy-btn" data-clipboard-target="#templateDisplay" id="copy-btn">Copy</button>
+    </div>
+</div>
+
+<!-- モデルパスをJavaScriptに渡す -->
+<script>
+    const MailtemplatesPath = "{% static 'mail_templates' %}";
+</script>
+{% endblock %}

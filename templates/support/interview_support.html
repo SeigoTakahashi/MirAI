@@ -1,0 +1,139 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}面接練習{% endblock %}
+{% block interview_active %}active{% endblock %}
+{% block nav_camera %}active{% endblock %}
+{% block extra_css %}
+  <link href="{% static 'css/interview_support.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>面接模擬練習</h3>
+
+<!-- 注意点 -->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <i class="fa fa-exclamation-circle me-2"></i>
+  この機能は <strong>Google Chrome</strong> でのご利用を推奨しています。
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<hr>
+<!-- 会社情報選択フォーム -->
+{% if companies %}
+<div class="form-group my-3 col-8">
+  <label for="companySelect"><strong>志望企業を選択（任意）</strong></label>
+  <select id="companySelect" class="form-control">
+    <option value="">-- 企業を選択 --</option>
+    {% for company in companies %}
+      <option value="{{ company.id }}">
+        {{ company.name }}
+      </option>
+    {% endfor %}
+  </select>
+</div>
+{% else %}
+  <div class="alert alert-info my-3  alert-dismissible fade show" role="alert">
+    <i class="fa fa-info-circle me-2"></i>
+    <a href="{% url 'information:company_information_list' %}">会社情報を登録</a>することで、志望企業に合わせた面接練習ができます。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
+<!-- 使い方の説明ボタン -->
+<div class="text-end">
+  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#usageModal">
+    <i class="fas fa-question-circle"></i> 使い方の説明
+  </button>
+</div>
+
+<div class="row">
+  <!-- カメラエリア -->
+  <div class="col-8">
+    <div id="cameraArea">
+      <video id="camera" width="600" height="450" autoplay muted playsinline></video>
+      <canvas id="canvas" width="600" height="450"></canvas>
+      <div id="smileBar">
+        <span class="arrow-left">◀︎</span>
+        <span id="smileIcon">😄</span>
+      </div>
+      <div id="volumeBar">
+        <span class="arrow-right">▶︎</span>
+        <span id="volumeIcon"><i class="fa fa-volume-up"></i></span>
+      </div>
+    </div>
+    <div id="postureArea">
+      <p id="postureMessage"></p>
+      <div id="BtnArea" class="d-flex justify-content-center gap-3">
+        <button id="savePoseBtn" class="btn btn-outline-secondary">正しい姿勢を保存</button>
+        <button id="actionBtn" class="btn btn-outline-success">▶ 質問＆録音開始</button>
+      </div>
+      <div id="controlButtons">
+        <button id="startBtn" class="btn btn-primary">開始</button>
+        <button id="stopBtn" class="btn btn-primary">終了</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 質問エリア -->
+  <div class="col-4">
+    <div class="card my-3">
+      <div class="card-body">
+        <h6 class="card-title">質問</h6>
+        <p id="question" class="card-text text-start"></p>
+      </div>
+    </div>
+    
+    <div class="card my-3">
+      <div class="card-body">
+        <h6 class="card-title">回答音声認識</h6>
+        <p id="transcript" class="card-text text-start"></p>
+      </div>
+    </div>
+    
+    <div class="card my-3">
+      <div class="card-body">
+        <h6 class="card-title">講評</h6>
+        <p id="feedback" class="card-text text-start"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- モーダル -->
+<div class="modal fade" id="usageModal" tabindex="-1" aria-labelledby="usageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usageModalLabel"><i class="fas fa-info-circle"></i> 使い方の説明</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <!-- 説明文 -->
+          <li>カメラとマイクを使用して、面接の練習を行います。</li>
+          <li><strong>「開始」</strong>ボタンをクリックして、カメラとマイクの使用を許可してください。</li>
+          <li>カメラ<strong>右</strong>のバーで、<strong>笑顔</strong>の状態を確認できます。</li>
+          <li>カメラ<strong>左</strong>のバーで、<strong>音声</strong>の状態を確認できます。</li>
+          <li>カメラが起動したら、<strong>「正しい姿勢を保存」</strong>ボタンをクリックして、正しい姿勢を記録します。</li>
+          <li>質問が表示されたら、<strong>「質問＆録音開始」</strong>ボタンをクリックして、回答を録音します。</li>
+          <li>回答が終わったら、<strong>「回答音声認識」</strong>による文字起こしが行われます。</li>
+          <li>回答音声認識で<strong>文字が表示された後</strong>、<strong>「録音停止」</strong>ボタンをクリックして、講評を待ちます。</li>
+          <li>講評が表示されます。内容を確認してください。</li>
+          <li>面接練習を終了するには、<strong>「終了」</strong>ボタンをクリックします。</li>
+          <li>面接練習の結果は、画面下部の<strong>「講評」</strong>セクションに表示されます。</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- モデルパスをJavaScriptに渡す -->
+<script>
+  const modelPath = "{% static 'models' %}";
+  const isLogin = "{{ user.is_authenticated|lower }}";
+</script>
+<script src="{% static 'js/face-api.min.js' %}"></script>
+<script defer src="{% static 'js/interview_support.js' %}"></script>
+{% endblock %}

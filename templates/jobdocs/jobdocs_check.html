@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}履歴書・ES文書添削{% endblock %}
+{% block jobdocs_active %}active{% endblock %}
+{% block nav_jobdocs_check %}active{% endblock %}
+{% block content %}
+<!-- メインコンテンツ -->
+<h3>履歴書・ES文書添削</h3>
+<hr>
+<!-- 説明文 -->
+<p>履歴書・ESの内容をチェックするためのフォームです。必要な情報を入力してください。</p>
+<!-- フィールドの表示 -->
+<div class="bg-light rounded h-100 p-4">
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.contents.label_tag }}<span class="require-mark">*</span>
+            {{ form.contents }}
+            {{ form.contents.errors }}
+            <!-- 文字数表示 -->
+            <div class="text-end mt-2">
+                <small>文字数: <span id="charCount">0</span>文字</small>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">チェック</button>
+    </form>
+
+    <!-- ポイント表示エリア -->
+    {% if result %}
+    <div class="my-5">
+        <h4>ポイント</h4>
+        <hr>
+        <textarea class="form-control auto-resize" rows="1" id="mailText">{{ result }}</textarea>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/jobdocs.js' %}"></script>
+{% endblock %}
