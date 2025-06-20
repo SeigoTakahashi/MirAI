@@ -57,29 +57,36 @@
         nav: false
     });
 
+    // 自動リサイズテキストエリア
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
-
-        // リサイズ
-        requestAnimationFrame(() => {
-            textarea.style.height = textarea.scrollHeight + 'px';
-        });
-
-        // 念のための2回目（遅延後）
-        setTimeout(() => {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }, 1500);
-    
+        textarea.style.height = textarea.scrollHeight + 'px';
     }
 
     // ページ読み込み時に初期化＋入力イベントをバインド
     $(document).ready(function () {
         $('.auto-resize').each(function () {
-            autoResizeTextarea(this);  // 初期リサイズ
+            const textarea = this;
+            let resizeQueued = false;
 
-            $(this).on('input', function () {
-                autoResizeTextarea(this);  // 入力時にリサイズ
+            // 初期リサイズ
+            autoResizeTextarea(textarea);
+
+            // 入力イベントにバインド（requestAnimationFrameで最適化）
+            $(textarea).on('input', function () {
+                if (!resizeQueued) {
+                    resizeQueued = true;
+
+                    requestAnimationFrame(() => {
+                        autoResizeTextarea(textarea);
+                        resizeQueued = false;
+                    });
+
+                    // 念のための2回目（遅延後）
+                    setTimeout(() => {
+                        autoResizeTextarea(textarea);
+                    }, 1500);
+                }
             });
         });
     });
