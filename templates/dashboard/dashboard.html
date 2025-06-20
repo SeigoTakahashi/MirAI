@@ -5,7 +5,12 @@
 {% block dashboard_active %}active{% endblock %}
 
 {% block content %}
-<h3>ダッシュボード</h3>
+<div class="d-flex justify-content-between align-items-center">
+    <h3 class="mb-0">ダッシュボード</h3>
+    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#usageModal">
+        <i class="fas fa-question-circle"></i> 使い方の説明
+    </button>
+</div>
 <hr>
 <!-- 通知バー -->
 <div class="notification-bar my-3" id="today-events"> 
@@ -59,7 +64,7 @@
     </div>
 </div>
 
-<!-- モーダルウィンドウ -->
+<!--  イベントモーダル -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg rounded-4 border-0">
@@ -224,6 +229,54 @@
     </div>
 </div>
 
+<!-- 使い方モーダル -->
+<div class="modal fade" id="usageModal" tabindex="-1" aria-labelledby="usageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="usageModalLabel"><i class="fas fa-info-circle"></i> 使い方の説明</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <!-- 説明文 -->
+                    <li><strong>ホーム</strong>
+                        <br>進捗の通知、スケジュールカレンダー、ToDoListをご利用できます。
+                    </li>
+                    <br>
+                    <li><strong>プロフィール</strong>
+                        <br>プロフィール情報を登録することができます。
+                    </li>
+                    <br>
+                    <li><strong>会社情報</strong>
+                        <br>会社を登録し、会社ごとに情報をまとめることができます。
+                    </li>
+                    <br>
+                    <li><strong>会社適正診断</strong>
+                        <br>プロフィールの情報をもとにAIがどのような会社があっているか診断できます。
+                    </li>
+                    <br>
+                    <span class="d-none d-lg-block"><li><strong>面接</strong>
+                        <br>カメラとマイクを使用することで面接の練習ができます。
+                    </li>
+                    </span>
+                    <br class="d-none d-lg-block">
+                    <li><strong>履歴書・ES</strong>
+                        <br>履歴書の文書をAIが作成・添削します。
+                        <br><span class="d-none d-lg-block">履歴書のダウンロード・編集ができます。</span>
+                    </li>
+                    <br>
+                    <li><strong>メール</strong>
+                        <br>メールの文書をAIが作成・チェックします。
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}

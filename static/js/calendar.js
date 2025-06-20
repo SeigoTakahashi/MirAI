@@ -18,7 +18,8 @@ function showTodayEvents(events) {
 
   todayEvents.forEach(e => {
     const time = e.allDay ? '終日' : e.start.toTimeString().slice(0, 5);
-    list.innerHTML += `<li class="list-group-item">${time} - ${e.title}</li>`;
+    const colorDot = `<span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${e.backgroundColor}; margin-right:8px;"></span>`;
+    list.innerHTML += `<li class="list-group-item">${colorDot}${time} - ${e.title}</li>`;
   });
 }
 document.addEventListener('DOMContentLoaded', function() {
