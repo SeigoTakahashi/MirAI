@@ -62,14 +62,12 @@
         textarea.style.height = textarea.scrollHeight + 'px';
     }
 
-    $(window).on('load', function () {
-        $('.auto-resize').each(function () {
-            autoResizeTextarea(this);
-            $(this).on('input', function () {
-                autoResizeTextarea(this);
-            });
+    setTimeout(() => {
+        document.querySelectorAll('.auto-resize').forEach(textarea => {
+            autoResizeTextarea(textarea);
+            textarea.addEventListener('input', () => autoResizeTextarea(textarea));
         });
-    });
+    }, 1000);
 
     // サイズの変更を検知してカレンダーのサイズとテキストエリアを更新
     $(window).on('resize', function () {
@@ -84,14 +82,6 @@
                 window.calendar.updateSize();
             }
         }, 3000); // 遅延して正しい高さを取得できるようにする（調整可能）
-    });
-
-    $(window).on('load', function () {
-        $('.auto-resize').each(function () {
-            autoResizeTextarea(this);
-            // 強制的に input イベントを発火
-            this.dispatchEvent(new Event('input'));
-        });
     });
 
     
