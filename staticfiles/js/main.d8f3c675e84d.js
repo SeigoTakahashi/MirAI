@@ -35,7 +35,7 @@
             if (window.calendar) {
                 window.calendar.updateSize();
             }
-        }, 500); // CSSトランジションの時間に合わせて調整
+        }, 2000); // CSSトランジションの時間に合わせて調整
         return false;
     });
 
@@ -70,7 +70,7 @@
         setTimeout(() => {
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
-        }, 1000);
+        }, 2000);
     }
     $('.auto-resize').each(function () {
         autoResizeTextarea(this);
