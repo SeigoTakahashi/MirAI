@@ -59,6 +59,7 @@
 
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
+        alert('自動リサイズを開始します。');
 
     // 1回目のリサイズ
     requestAnimationFrame(() => {
