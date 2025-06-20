@@ -65,7 +65,7 @@
             requestAnimationFrame(() => {
                 textarea.style.height = textarea.scrollHeight + 'px';
             });
-        }, 1000); // 遅延
+        }, 1500); // 遅延
     }
     $('.auto-resize').each(function () {
         autoResizeTextarea(this);
