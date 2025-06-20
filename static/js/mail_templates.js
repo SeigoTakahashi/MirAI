@@ -35,7 +35,7 @@ function autoResizeTextarea(el) {
     el.style.height = 'auto';
     setTimeout(() => {
         requestAnimationFrame(() => {
-            textarea.style.height = textarea.scrollHeight + 'px';
+            el.style.height = el.scrollHeight + 'px';
         });
-    }, 100); // 遅延
+    }, 500); // 遅延
 }
