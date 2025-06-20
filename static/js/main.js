@@ -63,19 +63,28 @@
         $textarea.css('height', $textarea[0].scrollHeight + 'px');
     }
 
-    $('textarea.auto-resize').each(function () {
-        const $this = $(this);
-        setTextareaHeight($this);
-        $this.on('input', function () {
-            setTextareaHeight($(this));
+    // テキストエリアの自動リサイズ初期化
+    function initializeAutoResize() {
+        $('textarea.auto-resize').each(function () {
+            const $this = $(this);
+            setTextareaHeight($this);
+            $this.off('input.autoResize').on('input.autoResize', function () {
+                setTextareaHeight($(this));
+            });
         });
+    }
+
+    // 初期化
+    requestAnimationFrame(() => {
+        initializeAutoResize();
     });
 
-    // 描画後の内容再取得
+    // 🚨 POST直後の描画が遅れることを考慮して遅延で再実行
     setTimeout(() => {
         $('textarea.auto-resize').each(function () {
             const $this = $(this);
             setTextareaHeight($this);
+            // ここが重要：inputイベントを強制発火
             this.dispatchEvent(new Event('input'));
         });
     }, 3000);
