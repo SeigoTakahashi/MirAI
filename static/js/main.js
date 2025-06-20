@@ -94,6 +94,14 @@
         }, 3000); // 遅延して正しい高さを取得できるようにする（調整可能）
     });
 
+    $(window).on('load', function () {
+        $('.auto-resize').each(function () {
+            autoResizeTextarea(this);
+            // 強制的に input イベントを発火
+            this.dispatchEvent(new Event('input'));
+        });
+    });
+
     
 
     // // 円グラフ
