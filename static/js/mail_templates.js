@@ -33,9 +33,14 @@ document.getElementById('templateDisplay')?.addEventListener('input', function (
 // 高さ自動調整関数
 function autoResizeTextarea(el) {
     el.style.height = 'auto';
+    // 1回目のリサイズ
+    requestAnimationFrame(() => {
+        el.style.height = el.scrollHeight + 'px';
+    });
+
+    // 念のための2回目（遅延後）
     setTimeout(() => {
-        requestAnimationFrame(() => {
-            el.style.height = el.scrollHeight + 'px';
-        });
-    }, 1000); // 遅延
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + 'px';
+    }, 500);
 }

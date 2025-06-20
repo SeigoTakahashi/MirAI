@@ -61,11 +61,16 @@
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
 
+        // 1回目のリサイズ
+        requestAnimationFrame(() => {
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
+
+        // 念のための2回目（遅延後）
         setTimeout(() => {
-            requestAnimationFrame(() => {
-                textarea.style.height = textarea.scrollHeight + 'px';
-            });
-        }, 1500); // 遅延
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }, 500);
     }
     $('.auto-resize').each(function () {
         autoResizeTextarea(this);
