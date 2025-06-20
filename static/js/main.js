@@ -63,30 +63,18 @@
         textarea.style.height = textarea.scrollHeight + 'px';
     }
 
-    // ページ読み込み時に初期化＋入力イベントをバインド
     $(document).ready(function () {
         $('.auto-resize').each(function () {
             const textarea = this;
-            let resizeQueued = false;
 
-            // 初期リサイズ
-            autoResizeTextarea(textarea);
+            autoResizeTextarea(textarea); // 初期リサイズ
 
-            // 入力イベントにバインド（requestAnimationFrameで最適化）
+            let timeoutId;
             $(textarea).on('input', function () {
-                if (!resizeQueued) {
-                    resizeQueued = true;
-
-                    requestAnimationFrame(() => {
-                        autoResizeTextarea(textarea);
-                        resizeQueued = false;
-                    });
-
-                    // 念のための2回目（遅延後）
-                    setTimeout(() => {
-                        autoResizeTextarea(textarea);
-                    }, 1500);
-                }
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    autoResizeTextarea(textarea);
+                }, 100); // 100ms後にリサイズ
             });
         });
     });
