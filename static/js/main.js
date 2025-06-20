@@ -76,7 +76,7 @@
                     autoResizeTextarea(this);
                 });
             });
-        }, 100); // 100ms遅延
+        }, 3000); 
     });
 
     // さらに安全のため、window.onloadでも実行
@@ -85,7 +85,7 @@
             $('.auto-resize').each(function () {
                 autoResizeTextarea(this);
             });
-        }, 50);
+        }, 3000);
     });
 
     // MutationObserverを使用してDOM変更を監視（より堅牢な解決策）
@@ -98,7 +98,7 @@
                         var self = this;
                         setTimeout(function() {
                             autoResizeTextarea(self);
-                        }, 50);
+                        }, 3000);
                     });
                 }
             });
