@@ -61,18 +61,18 @@
         textarea.style.height = 'auto';
         alert('自動リサイズを開始します。');
 
-    // 1回目のリサイズ
-    requestAnimationFrame(() => {
-        textarea.style.height = textarea.scrollHeight + 'px';
-    });
+        // 1回目のリサイズ
+        requestAnimationFrame(() => {
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
 
-    // 念のための2回目（遅延後）
-    setTimeout(() => {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-    }, 3000);
- 
-}
+        // 念のための2回目（遅延後）
+        setTimeout(() => {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }, 3000);
+    
+    }
 
     // サイズの変更を検知してカレンダーのサイズとテキストエリアを更新
     $(window).on('resize', function () {
