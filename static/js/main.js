@@ -70,7 +70,7 @@
         setTimeout(() => {
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
-        }, 500);
+        }, 1000);
     }
     $('.auto-resize').each(function () {
         autoResizeTextarea(this);
