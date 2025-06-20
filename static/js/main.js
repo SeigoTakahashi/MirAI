@@ -57,25 +57,45 @@
         nav: false
     });
 
-    // テキストエリアの自動リサイズ＆文字数カウント
-    function autoResizeTextarea(textarea) {
-        textarea.style.height = 'auto';
-
-        // 1回目のリサイズ
-        requestAnimationFrame(() => {
-            textarea.style.height = textarea.scrollHeight + 'px';
-        });
-
-        // 念のための2回目（遅延後）
-        setTimeout(() => {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }, 3000);
+    // 高さをセットする関数
+    function setTextareaHeight($textarea) {
+        $textarea.css('height', 'auto');
+        $textarea.css('height', $textarea[0].scrollHeight + 'px');
     }
-    $('.auto-resize').each(function () {
-        autoResizeTextarea(this);
-        $(this).on('input', function () {
-            autoResizeTextarea(this);
+
+    // 自動リサイズの初期化処理
+    function initializeAutoResize() {
+        $('textarea.auto-resize').each(function () {
+        const $this = $(this);
+        setTextareaHeight($this);
+
+        // 入力時に高さを再調整（readonlyでも設定OK）
+        $this.off('input.autoResize').on('input.autoResize', function () {
+            setTextareaHeight($(this));
+        });
+        });
+    }
+
+    // 1. DOM構築後に初期実行（描画完了を保証するため1フレーム遅延）
+    requestAnimationFrame(() => {
+        initializeAutoResize();
+    });
+
+    // 2. 念のため300ms後にも再実行（遅延描画対策）
+    setTimeout(() => {
+        initializeAutoResize();
+    }, 300);
+
+    // 3. textarea の内容が動的に変更されたときも対応（readonlyでもOK）
+    const observer = new MutationObserver(() => {
+        initializeAutoResize();
+    });
+
+    $('textarea.auto-resize').each(function () {
+        observer.observe(this, {
+        characterData: true,
+        childList: true,
+        subtree: true
         });
     });
 
