@@ -35,7 +35,7 @@
             if (window.calendar) {
                 window.calendar.updateSize();
             }
-        }, 2000); // CSSトランジションの時間に合わせて調整
+        }, 500); // CSSトランジションの時間に合わせて調整
         return false;
     });
 
@@ -70,7 +70,7 @@
         setTimeout(() => {
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
-        }, 2000);
+        }, 3000);
     }
     $('.auto-resize').each(function () {
         autoResizeTextarea(this);
@@ -91,7 +91,7 @@
             if (window.calendar) {
                 window.calendar.updateSize();
             }
-        }, 2000); // 遅延して正しい高さを取得できるようにする（調整可能）
+        }, 3000); // 遅延して正しい高さを取得できるようにする（調整可能）
     });
 
     
