@@ -57,58 +57,21 @@
         nav: false
     });
 
-    // テキストエリアの自動リサイズ＆文字数カウント
     function autoResizeTextarea(textarea) {
-        // 一時的にheightをautoにして正確なscrollHeightを取得
+        textarea.style.height = 'auto';
+
+    // 1回目のリサイズ
+    requestAnimationFrame(() => {
+        textarea.style.height = textarea.scrollHeight + 'px';
+    });
+
+    // 念のための2回目（遅延後）
+    setTimeout(() => {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';
-    }
-
-    // ページ読み込み完了後に実行
-    $(document).ready(function() {
-        // 少し遅延を入れてから実行（Vercel環境での安定性向上）
-        setTimeout(function() {
-            $('.auto-resize').each(function () {
-                autoResizeTextarea(this);
-                
-                // inputイベントリスナーを追加
-                $(this).on('input', function () {
-                    autoResizeTextarea(this);
-                });
-            });
-        }, 3000); 
-    });
-
-    // さらに安全のため、window.onloadでも実行
-    $(window).on('load', function() {
-        setTimeout(function() {
-            $('.auto-resize').each(function () {
-                autoResizeTextarea(this);
-            });
-        }, 3000);
-    });
-
-    // MutationObserverを使用してDOM変更を監視（より堅牢な解決策）
-    if (typeof MutationObserver !== 'undefined') {
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'childList') {
-                    // 新しく追加されたtextareaに対してもリサイズを適用
-                    $(mutation.addedNodes).find('.auto-resize').each(function() {
-                        var self = this;
-                        setTimeout(function() {
-                            autoResizeTextarea(self);
-                        }, 3000);
-                    });
-                }
-            });
-        });
-        
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
+    }, 3000);
+ 
+}
 
     // サイズの変更を検知してカレンダーのサイズとテキストエリアを更新
     $(window).on('resize', function () {
