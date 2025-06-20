@@ -648,5 +648,14 @@ input[name="color"]:checked + label {
   color: #bebdbd!important; /* 薄いグレー */
 }
 
+/* テキストエリアの自動リサイズ用CSS */
+.auto-resize {
+    resize: none; /* ユーザーによるリサイズを無効化 */
+    overflow: hidden; /* スクロールバーを非表示 */
+    min-height: 38px; /* 最小高さを設定 */
+    box-sizing: border-box; /* paddingとborderを含めた計算 */
+    line-height: 1.5; /* 行の高さを明確に指定 */
+    transition: height 0.1s ease; /* スムーズなアニメーション */
+}
 
 
