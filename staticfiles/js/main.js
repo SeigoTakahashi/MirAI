@@ -57,37 +57,19 @@
         nav: false
     });
 
-    // 自動リサイズテキストエリア
-    function setTextareaHeight($textarea) {
-        $textarea.css('height', 'auto');
-        $textarea.css('height', $textarea[0].scrollHeight + 'px');
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
     }
 
-    // テキストエリアの自動リサイズ初期化
-    function initializeAutoResize() {
-        $('textarea.auto-resize').each(function () {
-            const $this = $(this);
-            setTextareaHeight($this);
-            $this.off('input.autoResize').on('input.autoResize', function () {
-                setTextareaHeight($(this));
+    $(window).on('load', function () {
+        $('.auto-resize').each(function () {
+            autoResizeTextarea(this);
+            $(this).on('input', function () {
+                autoResizeTextarea(this);
             });
         });
-    }
-
-    // 初期化
-    requestAnimationFrame(() => {
-        initializeAutoResize();
     });
-
-    // 🚨 POST直後の描画が遅れることを考慮して遅延で再実行
-    setTimeout(() => {
-        $('textarea.auto-resize').each(function () {
-            const $this = $(this);
-            setTextareaHeight($this);
-            // ここが重要：inputイベントを強制発火
-            this.dispatchEvent(new Event('input'));
-        });
-    }, 3000);
 
     // サイズの変更を検知してカレンダーのサイズとテキストエリアを更新
     $(window).on('resize', function () {

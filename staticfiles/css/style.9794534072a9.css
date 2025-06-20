@@ -648,3 +648,11 @@ input[name="color"]:checked + label {
   color: #bebdbd!important; /* 薄いグレー */
 }
 
+/* テキストエリア */
+textarea.auto-resize {
+    overflow: hidden;
+    resize: none;
+    height: auto;
+    min-height: 1.5em;
+}
+
