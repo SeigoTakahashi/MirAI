@@ -42,5 +42,5 @@ function autoResizeTextarea(el) {
     setTimeout(() => {
         el.style.height = 'auto';
         el.style.height = el.scrollHeight + 'px';
-    }, 1000);
+    }, 2000);
 }
