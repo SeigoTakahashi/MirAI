@@ -57,17 +57,17 @@
         nav: false
     });
 
+    // テキストエリアの自動リサイズ＆文字数カウント
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';
     }
-
-    setTimeout(() => {
-        document.querySelectorAll('.auto-resize').forEach(textarea => {
-            autoResizeTextarea(textarea);
-            textarea.addEventListener('input', () => autoResizeTextarea(textarea));
+    $('.auto-resize').each(function () {
+        autoResizeTextarea(this);
+        $(this).on('input', function () {
+            autoResizeTextarea(this);
         });
-    }, 1000);
+    });
 
     // サイズの変更を検知してカレンダーのサイズとテキストエリアを更新
     $(window).on('resize', function () {
