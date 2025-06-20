@@ -647,3 +647,8 @@ input[name="color"]:checked + label {
 ::placeholder {
   color: #bebdbd!important; /* 薄いグレー */
 }
+
+/* テキストエリアサイズ */
+.auto-resize {
+    field-sizing: content;
+}
