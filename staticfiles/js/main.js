@@ -60,7 +60,9 @@
     // テキストエリアの自動リサイズ＆文字数カウント
     function autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
+        requestAnimationFrame(() => {
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
     }
     $('.auto-resize').each(function () {
         autoResizeTextarea(this);
