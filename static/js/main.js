@@ -69,9 +69,20 @@
         setTimeout(() => {
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
-        }, 500);
+        }, 2000);
     
     }
+
+    // ページ読み込み時に初期化＋入力イベントをバインド
+    $(document).ready(function () {
+        $('.auto-resize').each(function () {
+            autoResizeTextarea(this);  // 初期リサイズ
+
+            $(this).on('input', function () {
+                autoResizeTextarea(this);  // 入力時にリサイズ
+            });
+        });
+    });
 
     // サイズの変更を検知してカレンダーのサイズとテキストエリアを更新
     $(window).on('resize', function () {
