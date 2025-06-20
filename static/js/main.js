@@ -57,47 +57,28 @@
         nav: false
     });
 
-    // 高さをセットする関数
+    // 自動リサイズテキストエリア
     function setTextareaHeight($textarea) {
         $textarea.css('height', 'auto');
         $textarea.css('height', $textarea[0].scrollHeight + 'px');
     }
 
-    // 自動リサイズの初期化処理
-    function initializeAutoResize() {
-        $('textarea.auto-resize').each(function () {
+    $('textarea.auto-resize').each(function () {
         const $this = $(this);
         setTextareaHeight($this);
-
-        // 入力時に高さを再調整（readonlyでも設定OK）
-        $this.off('input.autoResize').on('input.autoResize', function () {
+        $this.on('input', function () {
             setTextareaHeight($(this));
         });
-        });
-    }
-
-    // 1. DOM構築後に初期実行（描画完了を保証するため1フレーム遅延）
-    requestAnimationFrame(() => {
-        initializeAutoResize();
     });
 
-    // 2. 念のため300ms後にも再実行（遅延描画対策）
+    // 描画後の内容再取得
     setTimeout(() => {
-        initializeAutoResize();
-    }, 300);
-
-    // 3. textarea の内容が動的に変更されたときも対応（readonlyでもOK）
-    const observer = new MutationObserver(() => {
-        initializeAutoResize();
-    });
-
-    $('textarea.auto-resize').each(function () {
-        observer.observe(this, {
-        characterData: true,
-        childList: true,
-        subtree: true
+        $('textarea.auto-resize').each(function () {
+            const $this = $(this);
+            setTextareaHeight($this);
+            this.dispatchEvent(new Event('input'));
         });
-    });
+    }, 3000);
 
     // サイズの変更を検知してカレンダーのサイズとテキストエリアを更新
     $(window).on('resize', function () {
