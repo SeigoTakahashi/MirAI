@@ -5,13 +5,13 @@
     --dark: #191C24;
 }
 
-.back-to-top {
-    position: fixed;
-    display: none;
-    right: 45px;
-    bottom: 45px;
-    z-index: 99;
-}
+    .back-to-top {
+        position: fixed;
+        display: block !important;
+        right: 45px;
+        bottom: 45px;
+        z-index: 9999;
+    }
 
 
 /*** Spinner ***/
@@ -473,7 +473,7 @@ a {
         padding: 0.25rem 0.5rem; /* コンパクトなボタン */
     }
     .fc-toolbar-title {
-        font-size: 0.7rem !important; /* タイトルも小さく */
+        font-size: 0.4rem !important; /* タイトルも小さく */
     }
     .fc .fc-col-header-cell {
         font-size: 0.4rem !important;
