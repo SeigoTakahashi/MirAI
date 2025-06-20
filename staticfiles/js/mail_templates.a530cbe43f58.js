@@ -33,5 +33,7 @@ document.getElementById('templateDisplay')?.addEventListener('input', function (
 // 高さ自動調整関数
 function autoResizeTextarea(el) {
     el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px';
+    requestAnimationFrame(() => {
+        el.style.height = el.scrollHeight + 'px';
+    });
 }

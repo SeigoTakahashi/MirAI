@@ -8,8 +8,8 @@
     .back-to-top {
         position: fixed;
         display: block !important;
-        right: 45px;
-        bottom: 45px;
+        right: 20px;
+        bottom: 20px;
         z-index: 9999;
     }
 
@@ -473,7 +473,7 @@ a {
         padding: 0.25rem 0.5rem; /* コンパクトなボタン */
     }
     .fc-toolbar-title {
-        font-size: 0.4rem !important; /* タイトルも小さく */
+        font-size: 0.5rem !important; /* タイトルも小さく */
     }
     .fc .fc-col-header-cell {
         font-size: 0.4rem !important;
