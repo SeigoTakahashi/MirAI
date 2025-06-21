@@ -659,7 +659,7 @@ input[name="color"]:checked + label {
 }
 
 /* 全体のバウンススクロールを無効化 */
-body {
+html, body {
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
 }
