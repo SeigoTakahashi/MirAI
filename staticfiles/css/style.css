@@ -658,4 +658,8 @@ input[name="color"]:checked + label {
     transition: height 0.1s ease; /* スムーズなアニメーション */
 }
 
+/* 全体のバウンススクロールを無効化 */
+html, body {
+    -webkit-overflow-scrolling: touch;
+}
 
