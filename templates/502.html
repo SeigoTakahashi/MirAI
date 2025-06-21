@@ -1,0 +1,17 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}ゲートウェイエラー{% endblock %}
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
+        <div class="col-md-6 text-center p-4">
+            <i class="bi bi-router display-1 text-danger"></i>
+            <h1 class="display-1 fw-bold">502</h1>
+            <h1 class="mb-4">Bad Gateway</h1>
+            <p class="mb-4">サーバーに接続できません。しばらく時間をおいてから再度お試しください。</p>
+            <a class="btn btn-primary rounded-pill py-3 px-5" href="{% url 'dashboard' %}">Go Back To Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

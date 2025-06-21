@@ -1,0 +1,17 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}サービス利用不可{% endblock %}
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
+        <div class="col-md-6 text-center p-4">
+            <i class="bi bi-tools display-1 text-warning"></i>
+            <h1 class="display-1 fw-bold">503</h1>
+            <h1 class="mb-4">Service Unavailable</h1>
+            <p class="mb-4">サービスが一時的に利用できません。メンテナンス中の可能性があります。</p>
+            <a class="btn btn-primary rounded-pill py-3 px-5" href="{% url 'dashboard' %}">Go Back To Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
