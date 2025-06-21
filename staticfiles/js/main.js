@@ -59,8 +59,20 @@
 
     // 自動リサイズテキストエリア
     function autoResizeTextarea(textarea) {
+        // テキストエリアの位置を基準に判定
+        const textareaRect = textarea.getBoundingClientRect();
+        const isTextareaVisible = textareaRect.top < window.innerHeight && textareaRect.bottom > 0;
+        
+        const currentScrollTop = window.pageYOffset;
+        
         textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
+        const newHeight = textarea.scrollHeight;
+        textarea.style.height = newHeight + 'px';
+        
+        // テキストエリアが見えている場合のみスクロール位置を維持
+        if (isTextareaVisible) {
+            window.scrollTo(0, currentScrollTop);
+        }
     }
 
     $(document).ready(function () {
