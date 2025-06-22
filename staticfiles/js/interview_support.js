@@ -301,7 +301,7 @@ function fetchQuestionAndSpeakThenRecord() {
 async function getDialogQuestion(userAnswer) {
     try {
         const res = await fetch('/support/get-dialog-question/', {
-            method: 'GET',
+            method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
                 original_question: questionText,
@@ -476,6 +476,7 @@ dialogBtn.addEventListener('click', async () => {
         const dialogQuestion = await getDialogQuestion(currentAnswer);
         question.textContent = dialogQuestion;
         transcript.textContent = "";
+        feedback.textContent = "";
 
         // 深掘り質問を読み上げ
         dialogBtn.innerText = '質問中…';

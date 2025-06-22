@@ -256,7 +256,7 @@ class InterviewTemplateView(TemplateView):
 class GetDialogQuestionView(View):
     """対話モードの質問取得API"""
 
-    def get(self, request):
+    def post(self, request):
         company_id = request.GET.get('company_id', None)
         user = request.user
 
