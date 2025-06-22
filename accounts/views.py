@@ -7,7 +7,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, 
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import ProfileForm, SignUpForm, LoginForm, MyPasswordResetForm, MySetPasswordForm
-from .models import Profile
+from .models import Profile, CustomUser
 
 class MyProfile(LoginRequiredMixin, FormView):
     """ プロフィールページ """
@@ -103,7 +103,8 @@ class PasswordReset(PasswordResetView):
       try:
           # 入力されたメールアドレスに対応するユーザーを取得
           email = form.cleaned_data['email']
-          user = self.get_users(email).first()
+          users = CustomUser.objects.filter(email=email, is_active=True)
+          user = users.first() if users.exists() else None
 
           if user and not user.has_usable_password():
               return render(self.request, 'accounts/password_reset_error.html', {
