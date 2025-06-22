@@ -359,12 +359,13 @@ class GetDialogQuestionView(View):
         
         # 会話履歴をプロンプトに追加
         if dialog_history:
-            prompt += "\n【質問作成】\n"
-            prompt += "過去の質問と回答を参考に、重複を避けて深掘りの質問を作成してください。\n"
             prompt += "【これまでの面接の流れ】\n"
             for entry in dialog_history:
                 if 'question' in entry and 'answer' in entry:
                     prompt += f"質問: {entry['question']}\n回答: {entry['answer']}\n"
+        
+            prompt += "\n【質問作成】\n"
+            prompt += "過去の質問と回答を参考に、重複を避けて深掘りの質問を作成してください。\n"
         
 
         # 未ログイン or プロフィールなしなら base_info は空のまま
