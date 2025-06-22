@@ -8,6 +8,7 @@ from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import ProfileForm, SignUpForm, LoginForm, MyPasswordResetForm, MySetPasswordForm
 from .models import Profile, CustomUser
+from allauth.socialaccount.models import SocialAccount
 
 class MyProfile(LoginRequiredMixin, FormView):
     """ プロフィールページ """
@@ -106,7 +107,7 @@ class PasswordReset(PasswordResetView):
           users = CustomUser.objects.filter(email=email, is_active=True)
           user = users.first() if users.exists() else None
 
-          if user and not user.has_usable_password():
+          if user and SocialAccount.objects.filter(user=user).exists():
               return render(self.request, 'accounts/password_reset_error.html', {
                   'error_message': 'このアカウントは外部認証（Googleなど）で作成されています。パスワードリセットはご利用いただけません。'
               })
