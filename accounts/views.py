@@ -1,5 +1,7 @@
 from django.views.generic import FormView, CreateView
 from django.urls import reverse_lazy
+import smtplib
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
@@ -96,6 +98,34 @@ class PasswordReset(PasswordResetView):
     template_name = 'accounts/password_reset_form.html'
     form_class = MyPasswordResetForm
     success_url = reverse_lazy('accounts:password_reset_done')
+
+    def form_valid(self, form):
+      try:
+          # 入力されたメールアドレスに対応するユーザーを取得
+          email = form.cleaned_data['email']
+          user = self.get_users(email).first()
+
+          if user and not user.has_usable_password():
+              return render(self.request, 'accounts/password_reset_error.html', {
+                  'error_message': 'このアカウントは外部認証（Googleなど）で作成されています。パスワードリセットはご利用いただけません。'
+              })
+
+          return super().form_valid(form)
+
+      except smtplib.SMTPNotSupportedError:
+          return render(self.request, 'accounts/password_reset_error.html', {
+              'error_message': 'このネットワーク環境ではメール送信がサポートされていません。別のネットワークをご利用ください。'
+          })
+
+      except smtplib.SMTPException as e:
+          return render(self.request, 'accounts/password_reset_error.html', {
+              'error_message': f'メール送信中にエラーが発生しました: {str(e)}'
+          })
+
+      except Exception as e:
+          return render(self.request, 'accounts/password_reset_error.html', {
+              'error_message': '予期しないエラーが発生しました。時間をおいて再度お試しください。'
+          })
 
 
 class PasswordResetDone(PasswordResetDoneView):

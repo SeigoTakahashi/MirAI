@@ -26,7 +26,7 @@
                 <div class="text-danger mt-2">{{ form.non_field_errors }}</div>
                 <!-- 新規作成 / パスワードを忘れた場合 -->
                 <div class="d-flex justify-content-between mb-3">
-                    <!-- <a href="{% url 'accounts:password_reset' %}" class="fs-9">パスワードを忘れた場合</a> -->
+                    <a href="{% url 'accounts:password_reset' %}" class="fs-9">パスワードを忘れた場合</a>
                      <a></a>
                     <a href="{% url 'accounts:signup' %}" class="fs-9">新規登録はこちら</a>
                 </div>
