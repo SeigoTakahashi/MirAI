@@ -300,7 +300,7 @@ function fetchQuestionAndSpeakThenRecord() {
 // 対話用の深掘り質問取得
 async function getDialogQuestion(userAnswer) {
     try {
-        const res = await fetch('/support/get-dialog-question/', {
+        const res = await fetch('/support/get_dialog_question/', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
