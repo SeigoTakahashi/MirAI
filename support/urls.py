@@ -6,6 +6,7 @@ from .views import (
     InterviewFeedbackView, 
     InterviewTemplateView,
     InterviewHistorySaveView,
+    GetDialogQuestionView,
 )
 
 app_name = 'support'
@@ -16,4 +17,5 @@ urlpatterns = [
     path('interview_feedback/', InterviewFeedbackView.as_view(), name='interview_feedback'),
     path('interview_template/', InterviewTemplateView.as_view(), name='interview_template'),
     path('interview_history_save/', InterviewHistorySaveView.as_view(), name='interview_history_save'),
+    path('get_dialog_question/', GetDialogQuestionView.as_view(), name='get_dialog_question'),
 ]

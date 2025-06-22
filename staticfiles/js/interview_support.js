@@ -10,6 +10,7 @@ const postureMessage = document.getElementById("postureMessage");
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const actionBtn = document.getElementById('actionBtn');
+const dialogBtn = document.getElementById('dialogBtn'); 
 const question = document.getElementById('question');
 const feedback = document.getElementById('feedback');
 const transcript = document.getElementById('transcript');
@@ -23,9 +24,11 @@ let stream = null;
 let faceAnalysisInterval = null;
 const postureThreshold = 20000; // 姿勢のしきい値
 let recognition;
-let step = 'question'; // question, recording, feedback, reading_feedback, reading_question
+let step = 'question'; // question, recording, feedback, reading_feedback, reading_question, dialog, dialog_recording
 let questionText = "";
 let tempTranscript = "";
+let currentAnswer = ""; // 現在の回答を保存
+let dialogHistory = []; // 対話履歴を保存
 
 // カメラの初期化
 async function startCamera() {
@@ -208,11 +211,17 @@ startBtn.addEventListener("click", async () => {
     startBtn.style.display = "none";
     savePoseBtn.style.display = "inline-block";
     actionBtn.style.display = "inline-block";
-    step = 'question'; // ステップを質問に戻す	await startCamera();
-    actionBtn.innerText = '▶ 質問＆録音開始';	
-    actionBtn.classList.remove('btn-outline-danger', 'btn-outline-dark');	
-    actionBtn.classList.add('btn-outline-success');	
+    dialogBtn.style.display = "none"; // 初期は非表示
+    step = 'question'; // ステップを質問に戻す
+    actionBtn.innerText = '▶ 質問＆録音開始';
+    actionBtn.classList.remove('btn-outline-danger', 'btn-outline-dark');
+    actionBtn.classList.add('btn-outline-success');
     actionBtn.disabled = false; // ボタンを有効化
+
+    // 履歴をリセット
+    dialogHistory = [];
+    currentAnswer = "";
+
     await startCamera();
     // ビデオがロードされてからサイズ設定
     video.addEventListener('loadedmetadata', () => {
@@ -230,7 +239,7 @@ function startRecording() {
 
     // 録音中の処理
     recognition.onresult = (event) => {
-        if (step !== 'recording') return;
+        if (step !== 'recording' && step !== 'dialog_recording') return;
         const result = event.results[event.results.length - 1][0].transcript;
         tempTranscript += result;
         transcript.textContent = `${tempTranscript}`;
@@ -245,6 +254,13 @@ function startRecording() {
             actionBtn.classList.remove('btn-outline-danger', 'btn-outline-success');
             actionBtn.classList.add('btn-outline-dark');
             actionBtn.disabled = true; // 講評中はボタン無効
+        } else if (step === 'dialog_recording') {
+            // 対話モードの録音終了
+            step = 'dialog';
+            actionBtn.innerText = '回答中…';
+            actionBtn.classList.remove('btn-outline-danger', 'btn-outline-success');
+            actionBtn.classList.add('btn-outline-dark');
+            actionBtn.disabled = true;
         }
     };
 
@@ -281,6 +297,27 @@ function fetchQuestionAndSpeakThenRecord() {
         });
 }
 
+// 対話用の深掘り質問取得
+async function getDialogQuestion(userAnswer) {
+    try {
+        const res = await fetch('/support/get-dialog-question/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({
+                original_question: questionText,
+                user_answer: userAnswer,
+                dialog_history: JSON.stringify(dialogHistory)
+            })
+        });
+
+        const data = await res.json();
+        return data.question;
+    } catch (error) {
+        console.error('対話質問の取得に失敗:', error);
+        return "もう少し詳しく教えてください。";
+    }
+}
+
 // 音声読み上げ
 function speakText(text) {
     const synth = window.speechSynthesis;
@@ -290,41 +327,41 @@ function speakText(text) {
 
     utter.onend = () => {
         if (step === 'reading_feedback') {
-            step = 'question';
+            // フィードバック読み上げ後は対話モードと次の質問を選択可能に
+            step = 'dialog';
+            dialogBtn.style.display = "inline-block"; // 対話ボタンを表示
+
+            dialogBtn.innerText = '💬 深掘り質問';
+            dialogBtn.classList.remove('btn-outline-danger', 'btn-outline-dark');
+            dialogBtn.classList.add('btn-outline-primary');
+            dialogBtn.disabled = false;
+
             actionBtn.innerText = '▶ 次の質問';
             actionBtn.classList.remove('btn-outline-dark', 'btn-outline-danger');
             actionBtn.classList.add('btn-outline-success');
-            actionBtn.disabled = false; // 講評読み上げ後にボタン有効
+            actionBtn.disabled = false;
 
-            const questionText = question.textContent.replace('質問：', '');
-            const transcriptText = transcript.textContent;
+            // 初回の回答を保存
+            currentAnswer = tempTranscript;
+            dialogHistory.push({
+                question: questionText,
+                answer: currentAnswer
+            });
 
-            // サーバーに質問、回答、フィードバックを送信し保存
-            if (isLogin == "true") {
-                fetch('/support/interview_history_save/', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: new URLSearchParams({
-                        question: questionText,
-                        answer: transcriptText,
-                        feedback: text
-                    })
-                }).then(res => res.json()).then(data => {
-                    if (data.success) {
-                        console.log("インタビューが保存されました");
-                    } else {
-                        console.error("インタビューの保存に失敗しました");
-                        console.error(data.error);
-                    }
-                });
-            }
-            
+        } else if (step === 'reading_dialog') {
+            // 対話質問読み上げ後は録音開始
+            startRecording();
+            step = 'dialog_recording';
+            dialogBtn.innerText = '⏹ 録音停止';
+            dialogBtn.classList.remove('btn-outline-primary', 'btn-outline-dark');
+            dialogBtn.classList.add('btn-outline-danger');
+            dialogBtn.disabled = false;
+            actionBtn.disabled = true; // 録音中は次の質問ボタンを無効化
         }
     };
 
     synth.speak(utter);
 }
-
 
 // ストップボタンの処理
 stopBtn.addEventListener("click", () => {
@@ -332,12 +369,40 @@ stopBtn.addEventListener("click", () => {
     startBtn.style.display = "block";
     savePoseBtn.style.display = "none";
     actionBtn.style.display = "none";
+    dialogBtn.style.display = "none"; // 対話ボタンも非表示
     window.speechSynthesis.cancel(); // 読み上げをキャンセル
     question.textContent = "";
     feedback.textContent = "";
     transcript.textContent = "";
+
+    // 対話履歴もリセット
+    dialogHistory = [];
+    currentAnswer = "";
+
     stopCamera();
 });
+
+// インタビュー履歴保存（既存機能を再利用）
+function saveInterviewHistory(questionText, answerText, feedbackText) {
+    if (isLogin == "true") {
+        fetch('/support/interview_history_save/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({
+                question: questionText,
+                answer: answerText,
+                feedback: feedbackText
+            })
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                console.log("インタビューが保存されました");
+            } else {
+                console.error("インタビューの保存に失敗しました");
+                console.error(data.error);
+            }
+        });
+    }
+}
 
 // アクションボタンの処理
 actionBtn.addEventListener('click', async () => {
@@ -349,6 +414,7 @@ actionBtn.addEventListener('click', async () => {
         step = 'reading_question'; // 質問読み上げ中にステップ変更
         actionBtn.innerText = '質問中…';
         actionBtn.disabled = true; // 読み上げ中はボタン無効
+
     } else if (step === 'recording') {
         // 録音停止ボタンが押された時
         recognition.stop(); // 録音停止
@@ -374,10 +440,69 @@ actionBtn.addEventListener('click', async () => {
         speakText(data.feedback); // 講評を読み上げる
         step = 'reading_feedback'; // 講評読み上げ中にステップ変更
 
+        // 従来の保存機能を維持
+        saveInterviewHistory(
+            questionText.replace('質問：', ''),
+            tempTranscript,
+            feedbackText
+        );
+
         // リセット
         tempTranscript = "";
+
+    } else if (step === 'dialog') {
+        // 次の質問に移行
+        step = 'question';
+        dialogBtn.style.display = "none"; // 対話ボタンを非表示
+
+        actionBtn.innerText = '▶ 次の質問';
+        actionBtn.classList.remove('btn-outline-primary', 'btn-outline-danger', 'btn-outline-dark');
+        actionBtn.classList.add('btn-outline-success');
+        actionBtn.disabled = false;
+
+        // 対話履歴をリセット
+        dialogHistory = [];
+        currentAnswer = "";
+        question.textContent = "";
+        feedback.textContent = "";
+        transcript.textContent = "";
     }
 });
 
+// 対話モードボタンの処理
+dialogBtn.addEventListener('click', async () => {
+    if (step === 'dialog') {
+        // 対話モード：深掘り質問を開始
+        const dialogQuestion = await getDialogQuestion(currentAnswer);
+        question.textContent = dialogQuestion;
+        transcript.textContent = "";
 
+        // 深掘り質問を読み上げ
+        dialogBtn.innerText = '質問中…';
+        dialogBtn.disabled = true;
+        actionBtn.disabled = true;
+        step = 'reading_dialog';
+        speakText(dialogQuestion);
 
+    } else if (step === 'dialog_recording') {
+        // 対話モードの録音停止
+        recognition.stop();
+
+        // 対話履歴に追加
+        dialogHistory.push({
+            question: question.textContent,
+            answer: tempTranscript
+        });
+
+        // 次の対話準備
+        currentAnswer = tempTranscript;
+        tempTranscript = "";
+
+        step = 'dialog';
+        dialogBtn.innerText = '💬 さらに深掘り';
+        dialogBtn.classList.remove('btn-outline-danger');
+        dialogBtn.classList.add('btn-outline-primary');
+        dialogBtn.disabled = false;
+        actionBtn.disabled = false; // 次の質問ボタンを再度有効化
+    }
+});
