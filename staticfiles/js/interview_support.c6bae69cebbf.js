@@ -301,7 +301,7 @@ function fetchQuestionAndSpeakThenRecord() {
 async function getDialogQuestion(userAnswer) {
     try {
         const res = await fetch('/support/get-dialog-question/', {
-            method: 'POST',
+            method: 'GET',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
                 original_question: questionText,
@@ -331,7 +331,7 @@ function speakText(text) {
             step = 'dialog';
             dialogBtn.style.display = "inline-block"; // 対話ボタンを表示
 
-            dialogBtn.innerText = '💬 深掘り質問';
+            dialogBtn.innerText = '▼ 深掘り質問';
             dialogBtn.classList.remove('btn-outline-danger', 'btn-outline-dark');
             dialogBtn.classList.add('btn-outline-primary');
             dialogBtn.disabled = false;
@@ -499,7 +499,7 @@ dialogBtn.addEventListener('click', async () => {
         tempTranscript = "";
 
         step = 'dialog';
-        dialogBtn.innerText = '💬 さらに深掘り';
+        dialogBtn.innerText = '▼ さらに深掘り';
         dialogBtn.classList.remove('btn-outline-danger');
         dialogBtn.classList.add('btn-outline-primary');
         dialogBtn.disabled = false;
