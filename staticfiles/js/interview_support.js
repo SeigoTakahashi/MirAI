@@ -337,6 +337,8 @@ function speakText(text) {
             dialogBtn.classList.remove('btn-outline-danger', 'btn-outline-dark');
             dialogBtn.classList.add('btn-outline-primary');
             dialogBtn.disabled = false;
+            
+            actionBtn.style.display = "inline-block"; // アクションボタンを表示
 
             actionBtn.innerText = '▶ 次の質問';
             actionBtn.classList.remove('btn-outline-dark', 'btn-outline-danger');
@@ -368,6 +370,7 @@ function speakText(text) {
             dialogBtn.classList.add('btn-outline-primary');
             dialogBtn.disabled = false;
             actionBtn.disabled = false; // 次の質問ボタンを再度有効化
+            actionBtn.style.display = "inline-block"; // アクションボタンを表示
         }
     };
 
@@ -456,6 +459,12 @@ actionBtn.addEventListener('click', async () => {
         speakText(feedbackText); // 講評を読み上げる
         step = 'reading_feedback'; // 講評読み上げ中にステップ変更
 
+        // 録音結果をインタビュー履歴に保存
+        dialogHistory.push({
+            question: questionText.replace('質問：', ''),
+            answer: tempTranscript
+        });
+
         // 従来の保存機能を維持
         saveInterviewHistory(
             questionText.replace('質問：', ''),
@@ -475,6 +484,7 @@ actionBtn.addEventListener('click', async () => {
         actionBtn.classList.remove('btn-outline-primary', 'btn-outline-danger', 'btn-outline-dark');
         actionBtn.classList.add('btn-outline-success');
         actionBtn.disabled = false;
+        actionBtn.style.display = "inline-block"; // アクションボタンを表示
 
         // 対話履歴をリセット
         dialogHistory = [];
@@ -509,7 +519,7 @@ dialogBtn.addEventListener('click', async () => {
         // 対話履歴に追加（フィードバック前に）
         dialogHistory.push({
             question: question.textContent,
-            answer: tempTranscript
+            answer: tempTranscript,
         });
 
         // フィードバック取得処理
