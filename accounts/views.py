@@ -124,7 +124,7 @@ class PasswordReset(PasswordResetView):
 
       except Exception as e:
           return render(self.request, 'accounts/password_reset_error.html', {
-              'error_message': '予期しないエラーが発生しました。時間をおいて再度お試しください。'
+              'error_message': f'予期しないエラーが発生しました。時間をおいて再度お試しください。{str(e)}'
           })
 
 
