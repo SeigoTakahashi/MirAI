@@ -121,12 +121,12 @@ class PasswordReset(PasswordResetView):
 
       except smtplib.SMTPException as e:
           return render(self.request, 'accounts/password_reset_error.html', {
-              'error_message': f'メール送信中にエラーが発生しました: {str(e)}'
+              'error_message': f'メール送信中にエラーが発生しました。'
           })
 
       except Exception as e:
           return render(self.request, 'accounts/password_reset_error.html', {
-              'error_message': f'予期しないエラーが発生しました。時間をおいて再度お試しください。{str(e)}'
+              'error_message': f'予期しないエラーが発生しました。時間をおいて再度お試しください。'
           })
 
 
