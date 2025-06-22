@@ -262,6 +262,7 @@ function startRecording() {
             dialogBtn.classList.add('btn-outline-dark');
             dialogBtn.disabled = true; // 講評中はボタン無効
             actionBtn.disabled = true; // 講評中は次の質問ボタンも無効
+            actionBtn.style.display = "none"; // アクションボタンを非表示
         }
     };
 
@@ -358,6 +359,7 @@ function speakText(text) {
             dialogBtn.classList.add('btn-outline-danger');
             dialogBtn.disabled = false;
             actionBtn.disabled = true; // 録音中は次の質問ボタンを無効化
+            actionBtn.style.display = "none"; // アクションボタンを非表示
         } else if (step === 'reading_dialog_feedback') {
             // 対話フィードバック読み上げ後は次の対話が可能に
             step = 'dialog';
@@ -496,6 +498,7 @@ dialogBtn.addEventListener('click', async () => {
         dialogBtn.innerText = '質問中…';
         dialogBtn.disabled = true;
         actionBtn.disabled = true;
+        actionBtn.style.display = "none"; // アクションボタンを非表示
         step = 'reading_dialog';
         speakText(dialogQuestion.replace('質問：', ''));
 
