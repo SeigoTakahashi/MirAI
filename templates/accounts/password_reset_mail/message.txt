@@ -1,4 +1,4 @@
 下記URLよりサイトにアクセスの上、パスワードの再設定を行ってください。
 
 再設定用URL
-{{ protocol}}://{{ domain }}{% url 'accounts:password_reset_confirm' uid token %}
+https://mir-ai-vert.vercel.app{% url 'accounts:password_reset_confirm' uid token %}
