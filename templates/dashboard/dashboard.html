@@ -29,7 +29,7 @@
                     <a href="{% url 'information:company_information_detail' progress.company.id %}" class="text-decoration-none text-secondary">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-flag fa-3x text-primary" aria-hidden="true"></i>
-                            <div class="ms-3">
+                            <div class="ms-3 text-end">
                                 <p class="mb-2">{{ progress.company.name }}</p>
                                 <p class="mb-0"><b>{{ progress.current_step.description|default:"未設定" }}</b></p>
                             </div>
