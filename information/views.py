@@ -17,7 +17,7 @@ class InformationView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['companies'] = Company.objects.filter(user=self.request.user)
+            context['companies'] = Company.objects.filter(user=self.request.user).order_by('-created_at')
         except Company.DoesNotExist:
             context['companies'] = None
         return context
