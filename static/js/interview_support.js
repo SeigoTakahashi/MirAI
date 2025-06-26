@@ -31,21 +31,15 @@ let currentAnswer = ""; // 現在の回答を保存
 let dialogHistory = []; // 対話履歴を保存
 
 document.addEventListener("DOMContentLoaded", function () {
-    const ua = navigator.userAgent;
-    const vendor = navigator.vendor;
+    let userAgent = window.navigator.userAgent.toLowerCase();
+    let isChrome = userAgent.indexOf('chrome') !== -1
 
-    // Google Chrome の判定（EdgeやOperaなど Chromiumベースブラウザを除外）
-    const isChrome = /Chrome/.test(ua) &&
-                     /Google Inc/.test(vendor) &&
-                     !/Edg/.test(ua) &&   // Edge の除外
-                     !/OPR/.test(ua);    // Opera の除外
-
+    // Chrome「以外」のときにアラートを表示
     if (!isChrome) {
-      // Chrome以外の場合に警告を表示
       document.getElementById("browser-warning").classList.remove("d-none");
     }
   });
-  
+
 // カメラの初期化
 async function startCamera() {
     stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
