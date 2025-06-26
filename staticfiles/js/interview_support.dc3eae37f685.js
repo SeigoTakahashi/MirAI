@@ -31,14 +31,26 @@ let currentAnswer = ""; // 現在の回答を保存
 let dialogHistory = []; // 対話履歴を保存
 
 document.addEventListener("DOMContentLoaded", function () {
-    let userAgent = window.navigator.userAgent.toLowerCase();
-    let isChrome = userAgent.indexOf('chrome') !== -1
+    let ua = navigator.userAgent.toLowerCase();
+    let isProbablyChrome = ua.includes('chrome') &&
+                           !ua.includes('edg') &&
+                           !ua.includes('opr') &&
+                           !ua.includes('opera');
 
-    // Chrome「以外」のときにアラートを表示
-    if (!isChrome) {
-      document.getElementById("browser-warning").classList.remove("d-none");
+    // Braveチェック（非同期）
+    if (navigator.brave && typeof navigator.brave.isBrave === "function") {
+      navigator.brave.isBrave().then(isBrave => {
+        if (!(isProbablyChrome && !isBrave)) {
+          document.getElementById("browser-warning").classList.remove("d-none");
+        }
+      });
+    } else {
+      // Braveでない場合（Braveオブジェクトが存在しない場合）
+      if (!isProbablyChrome) {
+        document.getElementById("browser-warning").classList.remove("d-none");
+      }
     }
-  });
+});
 
 // カメラの初期化
 async function startCamera() {
