@@ -133,6 +133,69 @@
   </div>
 </div>
 
+<!-- 面接結果モーダル -->
+<div class="modal fade" id="interviewResultModal" tabindex="-1" aria-labelledby="interviewResultModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="interviewResultModalLabel">面接結果</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+      </div>
+      <div class="modal-body">
+        <h5 class="mb-3">評価スコア</h5>
+        <div class="score-container">
+          <div class="score-item">
+            <div class="donut-chart" id="volume-chart">
+              <svg>
+                <circle class="donut-background" cx="50" cy="50" r="40"></circle>
+                <circle class="donut-progress" cx="50" cy="50" r="40" id="volume-progress"></circle>
+              </svg>
+              <div class="score-text" id="volume-score">0</div>
+            </div>
+            <div class="score-label">音量</div>
+          </div>
+          
+          <div class="score-item">
+            <div class="donut-chart" id="smile-chart">
+              <svg>
+                <circle class="donut-background" cx="50" cy="50" r="40"></circle>
+                <circle class="donut-progress" cx="50" cy="50" r="40" id="smile-progress"></circle>
+              </svg>
+              <div class="score-text" id="smile-score">0</div>
+            </div>
+            <div class="score-label">笑顔</div>
+          </div>
+          
+          <div class="score-item">
+            <div class="donut-chart" id="posture-chart">
+              <svg>
+                <circle class="donut-background" cx="50" cy="50" r="40"></circle>
+                <circle class="donut-progress" cx="50" cy="50" r="40" id="posture-progress"></circle>
+              </svg>
+              <div class="score-text" id="posture-score">0</div>
+            </div>
+            <div class="score-label">姿勢</div>
+          </div>
+          
+          <div class="score-item">
+            <div class="donut-chart" id="content-chart">
+              <svg>
+                <circle class="donut-background" cx="50" cy="50" r="40"></circle>
+                <circle class="donut-progress" cx="50" cy="50" r="40" id="content-progress"></circle>
+              </svg>
+              <div class="score-text" id="content-score">0</div>
+            </div>
+            <div class="score-label">内容</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- モデルパスをJavaScriptに渡す -->
 <script>
   window.MODEL_PATH = "{% static 'models/' %}";

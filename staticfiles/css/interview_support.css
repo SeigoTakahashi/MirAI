@@ -102,4 +102,75 @@
     z-index: 10;
 }
 
+/* 面接結果モーダル */
+.score-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin: 20px 0;
+}
 
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.donut-chart {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.donut-chart.invalid {
+opacity: 0.5;
+}
+
+.donut-chart.invalid .donut-progress {
+stroke: #6c757d; /* グレー */
+}
+
+.score-text.invalid {
+color: #6c757d;
+font-size: 14px;
+}
+
+.donut-chart svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.donut-chart circle {
+    fill: none;
+    stroke-width: 8;
+}
+
+.donut-background {
+    stroke: #e9ecef;
+}
+
+.donut-progress {
+    stroke: #00ff00;
+    stroke-linecap: round;
+    transition: stroke-dasharray 1s ease-in-out;
+}
+
+.score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.score-label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 5px;
+    color: #495057;
+}

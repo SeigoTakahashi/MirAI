@@ -30,6 +30,8 @@ let tempTranscript = "";
 let currentAnswer = ""; // 現在の回答を保存
 let dialogHistory = []; // 対話履歴を保存
 
+const scoreManager = new InterviewScoreManager(); // スコア管理インスタンス
+
 document.addEventListener("DOMContentLoaded", function () {
     let ua = navigator.userAgent.toLowerCase();
     let isProbablyChrome = ua.includes('chrome') &&
@@ -196,6 +198,16 @@ async function startFaceAnalysis() {
                 postureMessage.style.color = isGoodPosture ? "green" : "red";
             }
         }
+
+        if (detection && scoreManager.isRecording) {
+            scoreManager.updateScores(
+                meter ? meter.volume : 0,
+                resized.expressions.happy,
+                diff,
+                referenceLandmarks,
+                resized.landmarks.positions
+            );
+        }
     }, 300);
 }
 
@@ -254,6 +266,7 @@ startBtn.addEventListener("click", async () => {
 
 // 録音処理
 function startRecording() {
+    scoreManager.startScoring(); // スコアリングを開始
     recognition = new webkitSpeechRecognition();
     recognition.lang = 'ja-JP';
     recognition.continuous = true;
@@ -286,6 +299,8 @@ function startRecording() {
             actionBtn.disabled = true; // 講評中は次の質問ボタンも無効
             actionBtn.style.display = "none"; // アクションボタンを非表示
         }
+
+        scoreManager.stopScoring(); // スコアリングを停止
     };
 
     recognition.start();
@@ -416,6 +431,7 @@ stopBtn.addEventListener("click", () => {
     currentAnswer = "";
 
     stopCamera();
+    endInterview();
 });
 
 // インタビュー履歴保存（既存機能を再利用）
