@@ -124,9 +124,6 @@ class InterviewScoreManager {
     }
 }
 
-// グローバルスコア管理インスタンス
-const scoreManager = new InterviewScoreManager();
-
 // 無効状態メッセージ
 const invalidMessages = {
     'no_reference': '姿勢未設定',
