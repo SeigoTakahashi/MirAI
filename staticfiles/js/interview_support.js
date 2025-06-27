@@ -197,16 +197,16 @@ async function startFaceAnalysis() {
                 postureMessage.textContent = isGoodPosture ? "✔️ 正しい姿勢です" : "⚠️ 姿勢が崩れています";
                 postureMessage.style.color = isGoodPosture ? "green" : "red";
             }
-        }
 
-        if (detection && scoreManager.isRecording) {
-            scoreManager.updateScores(
-                meter ? meter.volume : 0,
-                resized.expressions.happy,
-                diff,
-                referenceLandmarks,
-                resized.landmarks.positions
-            );
+            if (detection && scoreManager.isRecording) {
+                scoreManager.updateScores(
+                    meter ? meter.volume : 0,
+                    resized.expressions.happy,
+                    diff,
+                    referenceLandmarks,
+                    resized.landmarks.positions
+                );
+            }
         }
     }, 300);
 }
