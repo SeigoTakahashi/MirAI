@@ -184,9 +184,10 @@ async function startFaceAnalysis() {
             const happyScore = resized.expressions.happy;
             smileIcon.style.bottom = (happyScore * 440) + "px";
 
+            let diff = 0;
+            
             if (referenceLandmarks) {
                 const current = resized.landmarks.positions;
-                let diff = 0;
                 for (let i = 0; i < current.length; i++) {
                     const dx = current[i].x - referenceLandmarks[i].x;
                     const dy = current[i].y - referenceLandmarks[i].y;
