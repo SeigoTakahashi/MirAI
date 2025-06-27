@@ -68,23 +68,41 @@ class InterviewScoreManager {
     }
     
     calculatePostureScore(diff, referenceLandmarks, currentLandmarks) {
-        if (!referenceLandmarks) return { score: 0, status: 'no_reference' };
-        if (!currentLandmarks) return { score: 0, status: 'no_face' };
+        // 基準姿勢が保存されていない場合
+        if (!referenceLandmarks) {
+            return { score: 0, status: 'not_saved' };
+        }
         
-        const postureThreshold = 20000;
-        if (diff > postureThreshold * 5) return { score: 0, status: 'too_far' };
+        // 現在の顔が検出されていない場合
+        if (!currentLandmarks) {
+            return { score: 0, status: 'no_face' };
+        }
         
-        const maxAcceptableDiff = postureThreshold * 2;
+        // 基準姿勢が保存されている場合、閾値を使って0-100でスコアリング
+        const postureThreshold = 20000; // 既存の閾値を使用
         
+        // 完全に正しい姿勢（差が閾値以下）
         if (diff <= postureThreshold) {
             return { score: 100, status: 'excellent' };
-        } else if (diff <= maxAcceptableDiff) {
-            const score = 100 - ((diff - postureThreshold) / (maxAcceptableDiff - postureThreshold)) * 40;
-            return { score: Math.round(score), status: 'good' };
-        } else {
-            const score = Math.max(0, 60 - ((diff - maxAcceptableDiff) / postureThreshold) * 30);
-            return { score: Math.round(score), status: 'poor' };
         }
+        
+        // 閾値を超えた場合、差が大きくなるほど点数を下げる
+        // 閾値の3倍まで徐々に減点、それ以上は0点
+        const maxDiff = postureThreshold * 3;
+        
+        if (diff >= maxDiff) {
+            return { score: 0, status: 'poor' };
+        }
+        
+        // 線形で減点：閾値超過分に応じて100点から0点まで減点
+        const excessDiff = diff - postureThreshold;
+        const excessRatio = excessDiff / (maxDiff - postureThreshold);
+        const score = Math.round(100 * (1 - excessRatio));
+        
+        return { 
+            score: Math.max(0, score), 
+            status: score >= 60 ? 'good' : 'fair' 
+        };
     }
     
     getFinalScores() {
@@ -103,17 +121,30 @@ class InterviewScoreManager {
     }
     
     getPostureScore() {
-        if (this.scores.posture.length === 0) return { score: 0, status: 'no_data' };
-        
-        const invalidCount = this.scores.posture.filter(p => p.status === 'no_face' || p.status === 'too_far').length;
-        const invalidRatio = invalidCount / this.scores.posture.length;
-        
-        if (invalidRatio > 0.5) {
-            return { score: 0, status: 'mostly_invalid' };
+        if (this.scores.posture.length === 0) {
+            return { score: 0, status: 'no_data' };
         }
         
-        const validScores = this.scores.posture.filter(p => p.score > 0).map(p => p.score);
-        if (validScores.length === 0) return { score: 0, status: 'no_valid_data' };
+        // 基準姿勢が保存されていないケースが多い場合
+        const notSavedCount = this.scores.posture.filter(p => p.status === 'not_saved').length;
+        if (notSavedCount > this.scores.posture.length * 0.5) {
+            return { score: 0, status: 'not_saved' };
+        }
+        
+        // 顔が検出されないケースが多い場合
+        const noFaceCount = this.scores.posture.filter(p => p.status === 'no_face').length;
+        if (noFaceCount > this.scores.posture.length * 0.5) {
+            return { score: 0, status: 'no_face' };
+        }
+        
+        // 有効なスコアのみを抽出して平均を計算
+        const validScores = this.scores.posture
+            .filter(p => p.status !== 'not_saved' && p.status !== 'no_face')
+            .map(p => p.score);
+            
+        if (validScores.length === 0) {
+            return { score: 0, status: 'no_valid_data' };
+        }
         
         const avgScore = Math.round(validScores.reduce((acc, score) => acc + score, 0) / validScores.length);
         return { score: avgScore, status: 'valid' };
@@ -124,14 +155,17 @@ class InterviewScoreManager {
     }
 }
 
-// 無効状態メッセージ
-const invalidMessages = {
-    'no_reference': '姿勢未設定',
+// 状態メッセージ
+const postureStatusMessages = {
+    'not_saved': '姿勢未保存',
     'no_face': '顔未検出',
-    'too_far': '距離が遠い',
-    'mostly_invalid': 'データ不足',
+    'no_data': 'データなし',
     'no_valid_data': '有効データなし',
-    'no_data': 'データなし'
+    'excellent': '優秀',
+    'good': '良好',
+    'fair': '要改善',
+    'poor': '不良',
+    'valid': '有効'
 };
 
 // ドーナツチャートのアニメーション関数
@@ -147,6 +181,15 @@ function animateDonutChart(elementId, score, isValid = true) {
         circle.style.strokeDashoffset = 0;
         return;
     }
+    
+    // スコアに応じた色設定
+    let color = '#28a745'; // 緑（良好）
+    if (score < 40) {
+        color = '#dc3545'; // 赤（不良）
+    } else if (score < 70) {
+        color = '#ffc107'; // 黄（要改善）
+    }
+    circle.style.stroke = color;
     
     const progress = (score / 100) * circumference;
     
@@ -172,13 +215,17 @@ function updateScoreDisplay(finalScores) {
     
     // 姿勢
     const postureScore = finalScores.posture;
-    if (typeof postureScore === 'object' && postureScore.status !== 'valid') {
-        document.getElementById('posture-score').textContent = "--";
-        animateDonutChart('posture-progress', 0, false);
+    if (typeof postureScore === 'object') {
+        if (postureScore.status !== 'valid') {
+            document.getElementById('posture-score').textContent = "--";
+            animateDonutChart('posture-progress', 0, false);
+        } else {
+            document.getElementById('posture-score').textContent = postureScore.score;
+            animateDonutChart('posture-progress', postureScore.score);
+        }
     } else {
-        const score = typeof postureScore === 'object' ? postureScore.score : postureScore;
-        document.getElementById('posture-score').textContent = score;
-        animateDonutChart('posture-progress', score);
+        document.getElementById('posture-score').textContent = postureScore;
+        animateDonutChart('posture-progress', postureScore);
     }
     
     // 内容

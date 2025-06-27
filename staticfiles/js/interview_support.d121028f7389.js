@@ -200,8 +200,8 @@ async function startFaceAnalysis() {
             }
 
             if (detection && scoreManager.isRecording) {
-                console.log(meter ? meter.volume : 0)
-                console.log(resized.expressions.happy)
+                console.log("音量"+meter ? meter.volume : 0)
+                console.log("笑顔"+resized.expressions.happy)
                 scoreManager.updateScores(
                     meter ? meter.volume : 0,
                     resized.expressions.happy,
