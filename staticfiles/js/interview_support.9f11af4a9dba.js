@@ -433,6 +433,9 @@ stopBtn.addEventListener("click", () => {
     dialogHistory = [];
     currentAnswer = "";
 
+    // 姿勢保存機能をリセット
+    referenceLandmarks = null;
+
     stopCamera();
     endInterview();
 });

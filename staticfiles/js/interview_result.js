@@ -173,11 +173,13 @@ function animateDonutChart(elementId, score, isValid = true) {
     const circle = document.getElementById(elementId);
     const radius = 40;
     const circumference = 2 * Math.PI * radius;
+
+    // 共通のdasharray設定（円を描くための準備）
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
     
     if (!isValid || score === 0) {
         // 無効な場合はグレーアウト
         circle.style.stroke = '#6c757d';
-        circle.style.strokeDasharray = '5,5';
         circle.style.strokeDashoffset = 0;
         return;
     }
@@ -194,7 +196,6 @@ function animateDonutChart(elementId, score, isValid = true) {
     const progress = (score / 100) * circumference;
     
     // 初期設定
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = circumference;
     
     // アニメーション開始
