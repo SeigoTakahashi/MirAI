@@ -185,7 +185,7 @@ async function startFaceAnalysis() {
             smileIcon.style.bottom = (happyScore * 440) + "px";
 
             let diff = 0;
-            
+
             if (referenceLandmarks) {
                 const current = resized.landmarks.positions;
                 for (let i = 0; i < current.length; i++) {
@@ -200,6 +200,8 @@ async function startFaceAnalysis() {
             }
 
             if (detection && scoreManager.isRecording) {
+                console.log(meter ? meter.volume : 0)
+                console.log(resized.expressions.happy)
                 scoreManager.updateScores(
                     meter ? meter.volume : 0,
                     resized.expressions.happy,
