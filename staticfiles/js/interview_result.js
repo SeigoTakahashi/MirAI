@@ -35,8 +35,13 @@ class InterviewScoreManager {
     }
     
     calculateVolumeScore(volume) {
-        const minVolume = 0.05;
-        const maxVolume = 0.5;
+        if (volume == null || volume <= 0) return 0;
+
+        // 実測に基づいた範囲で正規化
+        const minVolume = 0.001;  // もはやこの辺から反応してる
+        const maxVolume = 0.4;    // これ以上はうるさすぎる想定
+
+        // クリップ（範囲外は最小・最大に固定）
         const clamped = Math.max(minVolume, Math.min(volume, maxVolume));
         const normalized = (clamped - minVolume) / (maxVolume - minVolume); // 0〜1
         return Math.round(normalized * 100);
@@ -45,18 +50,20 @@ class InterviewScoreManager {
     calculateSmileScore(happyScore) {
         if (happyScore === null || happyScore === undefined) return 0;
         
+        const score = happyScore * 100; // 0〜100 にスケーリング
+
         // 理想的な範囲を 40〜80 に設定（自然な笑顔）
-        if (happyScore >= 40 && happyScore <= 80) {
-            return Math.min(100, happyScore + 10); // ボーナス加点（最大100）
+        if (score >= 40 && score <= 80) {
+            return Math.min(100, score + 10); // ボーナス加点（最大100）
         }
 
         // 弱い笑顔（0〜40） → 少し低めに評価
-        if (happyScore < 40) {
-            return Math.max(0, happyScore * 0.9); // 少し弱めに補正
+        if (score < 40) {
+            return Math.max(0, score * 0.9); // 少し弱めに補正
         }
 
         // 作り笑いっぽく見える過剰な笑顔（80〜100）
-        return Math.max(60, 100 - (happyScore - 80) * 2); // 減点ありでも60点以上は確保
+        return Math.max(60, 100 - (score - 80) * 2); // 減点ありでも60点以上は確保
     }
     
     calculatePostureScore(diff, referenceLandmarks, currentLandmarks) {
