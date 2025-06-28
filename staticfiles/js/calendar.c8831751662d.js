@@ -9,7 +9,13 @@ function showTodayEvents(events) {
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
 
-  const todayEvents = events.filter(e => e.start >= today && e.start < tomorrow).sort((a, b) => a.start - b.start);;
+  const todayEvents = events.filter(e => {
+    const start = new Date(e.start);
+    const end = new Date(e.end);
+
+    // イベントが今日に少しでもかかっていればOK
+    return start < tomorrow && end > today;
+  }).sort((a, b) => new Date(a.start) - new Date(b.start));
 
   if (todayEvents.length === 0) {
     list.innerHTML = '<li class="list-group-item">本日のイベントはありません。</li>';
