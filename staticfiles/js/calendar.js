@@ -11,7 +11,7 @@ function showTodayEvents(events) {
 
   const todayEvents = events.filter(e => {
     const start = new Date(e.start);
-    const end = new Date(e.end);
+    const end = e.end ? new Date(e.end) : new Date(start);
 
     // イベントが今日に少しでもかかっていればOK
     return start < tomorrow && end > today;
