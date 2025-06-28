@@ -13,8 +13,13 @@ function showTodayEvents(events) {
     const start = new Date(e.start);
     const end = e.end ? new Date(e.end) : new Date(start);
 
-    // イベントが今日に少しでもかかっていればOK
-    return start < tomorrow && end > today;
+    // A: 通常の「今日開始」のイベント（これまで通り）
+    const isStartToday = start >= today && start < tomorrow;
+
+    // B: 今日に「重なっている」期間イベント
+    const isOverlappingToday = start < tomorrow && end > today;
+
+    return isStartToday || isOverlappingToday;
   }).sort((a, b) => new Date(a.start) - new Date(b.start));
 
   if (todayEvents.length === 0) {
