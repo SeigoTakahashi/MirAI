@@ -165,7 +165,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'dashboard:dashboard'
 LOGOUT_URL = 'accounts:logout'
-LOGOUT_REDIRECT_URL = 'dashboard:dashboard'
+LOGOUT_REDIRECT_URL = 'dashboard'
 
 # メール送信設定
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
