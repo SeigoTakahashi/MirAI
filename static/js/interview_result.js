@@ -150,6 +150,10 @@ class InterviewScoreManager {
     setContentScore(score) {
         this.scores.content = score;
     }
+
+    getContentScore() {
+        return this.scores.content;
+    }
 }
 
 // 状態メッセージ
@@ -237,7 +241,7 @@ function endInterview() {
     const finalScores = scoreManager.getFinalScores();
     
     // 内容スコアを仮で設定（実際はGemini AIから取得）
-    finalScores.content = Math.floor(Math.random() * 40) + 60; // 60-100のランダム
+    finalScores.content = scoreManager.getContentScore();
     
     console.log('最終スコア:', finalScores);
     

@@ -256,7 +256,7 @@ class GetDialogQuestionView(View):
     """対話モードの質問取得API"""
 
     def post(self, request):
-        company_id = request.GET.get('company_id', None)
+        company_id = request.POST.get('company_id', None)
         user = request.user
 
         # 会話履歴
@@ -376,4 +376,33 @@ class GetDialogQuestionView(View):
         return JsonResponse({'question': question})
 
 
-    
+@method_decorator(csrf_exempt, name='dispatch')
+class GetContentFinalScoreView(View):
+    """ 内容の最終評価スコアを取得するAPI """
+
+    def post(self, request):
+        try:
+            all_dialog_history = json.loads(request.POST.get('all_dialog_history', '[]'))
+
+            history_text = "\n".join([f"質問「{h['question']}」: 学生の回答「{h['answer']}」" for h in all_dialog_history])
+            prompt = (
+                "これは就職活動の面接である。"
+                "以下は面接の会話内容です。受け答えの内容・論理性・意欲などを踏まえて、"
+                "面接のパフォーマンスを0〜100の整数で評価してください。\n\n"
+                f"{history_text}\n\n"
+                "評価スコア（0〜100の整数）を数値のみで出力してください。"
+            )
+
+            raw_score = generate_text(prompt)
+
+            # スコアから整数値のみを抽出
+            import re
+            match = re.search(r'\b\d{1,3}\b', raw_score)
+            score = int(match.group()) if match else 0
+
+            # 範囲制限（0〜100）
+            score = max(0, min(score, 100))
+
+            return JsonResponse({'score': score})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)

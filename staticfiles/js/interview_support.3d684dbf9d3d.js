@@ -29,6 +29,7 @@ let questionText = "";
 let tempTranscript = "";
 let currentAnswer = ""; // 現在の回答を保存
 let dialogHistory = []; // 対話履歴を保存
+let allDialogHistroy = []; // 全ての対話履歴を保存
 
 const scoreManager = new InterviewScoreManager(); // スコア管理インスタンス
 
@@ -200,8 +201,6 @@ async function startFaceAnalysis() {
             }
 
             if (detection && scoreManager.isRecording) {
-                console.log("音量"+meter ? meter.volume : 0)
-                console.log("笑顔"+resized.expressions.happy)
                 scoreManager.updateScores(
                     meter ? meter.volume : 0,
                     resized.expressions.happy,
@@ -257,6 +256,7 @@ startBtn.addEventListener("click", async () => {
 
     // 履歴をリセット
     dialogHistory = [];
+    allDialogHistroy = [];
     currentAnswer = "";
 
     await startCamera();
@@ -342,10 +342,13 @@ function fetchQuestionAndSpeakThenRecord() {
 // 対話用の深掘り質問取得
 async function getDialogQuestion(userAnswer) {
     try {
+        const companySelectElement = document.getElementById('companySelect');
+        const selectedCompanyId = companySelectElement ? companySelectElement.value : null;
         const res = await fetch('/support/get_dialog_question/', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
+                company_id: selectedCompanyId,
                 original_question: questionText,
                 user_answer: userAnswer,
                 dialog_history: JSON.stringify(dialogHistory)
@@ -392,6 +395,11 @@ function speakText(text) {
                 answer: currentAnswer
             });
 
+            allDialogHistory.push({
+                question: questionText,
+                answer: currentAnswer
+            });
+
         } else if (step === 'reading_dialog') {
             // 対話質問読み上げ後は録音開始
             startRecording();
@@ -418,7 +426,7 @@ function speakText(text) {
 }
 
 // ストップボタンの処理
-stopBtn.addEventListener("click", () => {
+stopBtn.addEventListener("click", async () => {
     stopBtn.style.display = "none";
     startBtn.style.display = "block";
     savePoseBtn.style.display = "none";
@@ -432,6 +440,13 @@ stopBtn.addEventListener("click", () => {
     // 対話履歴もリセット
     dialogHistory = [];
     currentAnswer = "";
+
+    // 内容の評価スコアを取得・セット
+    const contentScore = await getContentFinalScore();
+    scoreManager.setContentScore(Number(contentScore));
+
+    // 全ての対話履歴もリセット
+    allDialogHistroy = [];
 
     // 姿勢保存機能をリセット
     referenceLandmarks = null;
@@ -509,6 +524,11 @@ actionBtn.addEventListener('click', async () => {
             answer: tempTranscript
         });
 
+        allDialogHistory.push({
+            question: questionText.replace('質問：', ''),
+            answer: tempTranscript
+        });
+
         // 従来の保存機能を維持
         saveInterviewHistory(
             questionText.replace('質問：', ''),
@@ -566,6 +586,11 @@ dialogBtn.addEventListener('click', async () => {
             answer: tempTranscript,
         });
 
+        allDialogHistory.push({
+            question: question.textContent,
+            answer: tempTranscript,
+        });
+
         // フィードバック取得処理
         const feedbackText = await getFeedback(tempTranscript, question.textContent);
         feedback.textContent = feedbackText;
@@ -586,3 +611,22 @@ dialogBtn.addEventListener('click', async () => {
         speakText(feedbackText);
     }
 });
+
+// 対話用の深掘り質問取得
+async function getContentFinalScore() {
+    try {
+        const res = await fetch('/support/get_content_final_score/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({
+                all_dialog_history: JSON.stringify(allDialogHistroy)
+            })
+        });
+
+        const data = await res.json();
+        return data.score;
+    } catch (error) {
+        console.error('内容評価の取得に失敗:', error);
+        return 0;
+    }
+}
