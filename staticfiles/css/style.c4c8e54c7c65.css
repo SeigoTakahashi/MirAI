@@ -464,9 +464,14 @@ a {
     }
 }
 
-/* PCでもタイトルのサイズを小さくする */
+/* PCでもサイズを小さくする */
 .fc-toolbar-title {
-    font-size: 0.7rem !important; /* タイトルも小さく */
+    font-size: 0.8rem !important; /* タイトルも小さく */
+}
+
+.fc .fc-col-header-cell {
+    font-size: 0.8rem !important;
+    padding: 2px;
 }
 
 /*** スマホだと画面おかしくなるから直す ***/
