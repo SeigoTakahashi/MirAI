@@ -29,7 +29,7 @@ let questionText = "";
 let tempTranscript = "";
 let currentAnswer = ""; // 現在の回答を保存
 let dialogHistory = []; // 対話履歴を保存
-let allDialogHistroy = []; // 全ての対話履歴を保存
+let allDialogHistory = []; // 全ての対話履歴を保存
 
 const scoreManager = new InterviewScoreManager(); // スコア管理インスタンス
 
@@ -256,7 +256,7 @@ startBtn.addEventListener("click", async () => {
 
     // 履歴をリセット
     dialogHistory = [];
-    allDialogHistroy = [];
+    allDialogHistory = [];
     currentAnswer = "";
 
     await startCamera();
@@ -441,12 +441,15 @@ stopBtn.addEventListener("click", async () => {
     dialogHistory = [];
     currentAnswer = "";
 
+    let contentScore = 0;
     // 内容の評価スコアを取得・セット
-    const contentScore = await getContentFinalScore();
+    if (allDialogHistory) {
+        contentScore = await getContentFinalScore();
+    }
     scoreManager.setContentScore(Number(contentScore));
 
     // 全ての対話履歴もリセット
-    allDialogHistroy = [];
+    allDialogHistory = [];
 
     // 姿勢保存機能をリセット
     referenceLandmarks = null;
@@ -619,7 +622,7 @@ async function getContentFinalScore() {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
-                all_dialog_history: JSON.stringify(allDialogHistroy)
+                all_dialog_history: JSON.stringify(allDialogHistory)
             })
         });
 
