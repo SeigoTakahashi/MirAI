@@ -7,6 +7,9 @@ from .forms import EventForm
 from .models import Event
 from information.models import Progress
 
+class TitleView(TemplateView):
+    template_name = 'dashboard/title.html'
+
 class DashboardView(LoginRequiredMixin, TemplateView):
     """ダッシュボードページ"""
 

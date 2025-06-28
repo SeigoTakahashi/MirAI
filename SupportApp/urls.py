@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.urls import path
 from django.urls import path, include
-from dashboard.views import DashboardView
+from dashboard.views import DashboardView, TitleView
 from django.shortcuts import render
 
 urlpatterns = [
-    path('', DashboardView.as_view(), name='dashboard'),
+    path('', TitleView.as_view(), name='dashboard'),
     path('dashboard/', include('dashboard.urls')),
     path('support/', include('support.urls')),
     path('mail/', include('mail.urls')),
