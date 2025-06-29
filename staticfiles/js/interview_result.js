@@ -37,8 +37,8 @@ class InterviewScoreManager {
     calculateVolumeScore(volume) {
         if (volume == null || volume <= 0) return 0;
 
-        const minVolume = 0.0005; // より低音量も評価
-        const maxVolume = 0.3;    // 過剰な声量でもスコアが下がりすぎない
+        const minVolume = 0.0003; // より低音量も評価
+        const maxVolume = 0.4;    // 過剰な声量でもスコアが下がりすぎない
 
         const clamped = Math.max(minVolume, Math.min(volume, maxVolume));
         const normalized = (clamped - minVolume) / (maxVolume - minVolume);
@@ -52,16 +52,16 @@ class InterviewScoreManager {
         
         const score = happyScore * 100;
 
-        if (score >= 30 && score <= 85) {
-            return Math.min(100, score + 15); // 幅広くボーナス対象に
+        if (score >= 20 && score <= 90) {
+            return Math.min(100, score + 20); // 幅広くボーナス対象に
         }
 
-        if (score < 30) {
-            return Math.max(20, score * 1.2); // 最低20点保証＋やや甘め
+        if (score < 20) {
+            return Math.max(20, score * 1.3); // 最低20点保証＋やや甘め
         }
 
-        // 85以上の「満面の笑み」も減点を緩く
-        return Math.max(70, 100 - (score - 85) * 1.2);
+        // 90以上の「満面の笑み」も減点を緩く
+        return Math.max(70, 100 - (score - 90) * 1.3);
     }
     
     calculatePostureScore(diff, referenceLandmarks, currentLandmarks) {
@@ -76,7 +76,7 @@ class InterviewScoreManager {
         }
         
         // 基準姿勢が保存されている場合、閾値を使って0-100でスコアリング
-        const postureThreshold = 20000; // 既存の閾値を使用
+        const postureThreshold = 15000; // 既存の閾値を使用
         
         // 完全に正しい姿勢（差が閾値以下）
         if (diff <= postureThreshold) {
@@ -84,8 +84,8 @@ class InterviewScoreManager {
         }
         
         // 閾値を超えた場合、差が大きくなるほど点数を下げる
-        // 閾値の3倍まで徐々に減点、それ以上は0点
-        const maxDiff = postureThreshold * 3;
+        // 閾値の2.5倍まで徐々に減点、それ以上は0点
+        const maxDiff = postureThreshold * 2.5;
         
         if (diff >= maxDiff) {
             return { score: 0, status: 'poor' };
@@ -94,11 +94,11 @@ class InterviewScoreManager {
         // 線形で減点：閾値超過分に応じて100点から0点まで減点
         const excessDiff = diff - postureThreshold;
         const excessRatio = excessDiff / (maxDiff - postureThreshold);
-        const score = Math.round(100 * (1 - excessRatio));
+        const score = Math.round(90 * (1 - excessRatio));
         
         return { 
             score: Math.max(0, score), 
-            status: score >= 60 ? 'good' : 'fair' 
+            status: score >= 70 ? 'good' : 'fair' 
         };
     }
     
@@ -124,13 +124,13 @@ class InterviewScoreManager {
         
         // 基準姿勢が保存されていないケースが多い場合
         const notSavedCount = this.scores.posture.filter(p => p.status === 'not_saved').length;
-        if (notSavedCount > this.scores.posture.length * 0.5) {
+        if (notSavedCount > this.scores.posture.length * 0.3) {
             return { score: 0, status: 'not_saved' };
         }
         
         // 顔が検出されないケースが多い場合
         const noFaceCount = this.scores.posture.filter(p => p.status === 'no_face').length;
-        if (noFaceCount > this.scores.posture.length * 0.5) {
+        if (noFaceCount > this.scores.posture.length * 0.3) {
             return { score: 0, status: 'no_face' };
         }
         
