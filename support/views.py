@@ -391,6 +391,7 @@ class GetContentFinalScoreView(View):
                 "面接のパフォーマンスを0〜100の整数で評価してください。\n\n"
                 f"{history_text}\n\n"
                 "評価スコア（0〜100の整数）を数値のみで出力してください。"
+                "もし履歴がなかったら、0を出力してください。"
             )
 
             raw_score = generate_text(prompt)

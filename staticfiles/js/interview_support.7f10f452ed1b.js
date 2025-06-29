@@ -443,11 +443,9 @@ stopBtn.addEventListener("click", async () => {
 
     let contentScore = 0;
     // 内容の評価スコアを取得・セット
-    if (allDialogHistory) {
+    if (allDialogHistory.length != 0) {
         contentScore = await getContentFinalScore();
-        console.log(1);
     }
-    console.log(allDialogHistory);
     scoreManager.setContentScore(Number(contentScore));
 
     // 全ての対話履歴もリセット
