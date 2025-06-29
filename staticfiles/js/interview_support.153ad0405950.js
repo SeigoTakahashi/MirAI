@@ -445,7 +445,9 @@ stopBtn.addEventListener("click", async () => {
     // 内容の評価スコアを取得・セット
     if (allDialogHistory) {
         contentScore = await getContentFinalScore();
+        console.log(1);
     }
+    console.log(allDialogHistory);
     scoreManager.setContentScore(Number(contentScore));
 
     // 全ての対話履歴もリセット
