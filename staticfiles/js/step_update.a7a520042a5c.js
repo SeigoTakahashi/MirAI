@@ -137,6 +137,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // ボタンの状態を制御
+        controlButtons(circles.length);
+
     }
 
     // 次へボタンのイベントリスナー
