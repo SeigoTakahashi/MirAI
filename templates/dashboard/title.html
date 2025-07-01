@@ -4,12 +4,13 @@
 {% block title %}MirAI{% endblock %}
 {% block content %}
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
+    <div class="row vh-80 bg-light rounded align-items-center justify-content-center mx-0">
         <div class="col-md-8 text-center p-4">
             <i class="bi bi-people text-primary display-1"></i>
             <h1 class="display-1 fw-bold text-dark">MirAI</h1>
             <h4 class="mb-4 text-secondary">就活サポートアプリ</h4>
             <p class="lead text-muted">AIで未来を切り拓く、あなたのキャリアパートナー</p>
+            <a href="{% url 'accounts:login' %}" class="btn btn-primary mb-4">ログインはこちら</a>
         </div>
     </div>
 </div>
