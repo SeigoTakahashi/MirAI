@@ -10,7 +10,9 @@
             <h1 class="display-1 fw-bold text-dark">MirAI</h1>
             <h4 class="mb-4 text-secondary">就活サポートアプリ</h4>
             <p class="lead text-muted">AIで未来を切り拓く、あなたのキャリアパートナー</p>
-            <a href="{% url 'accounts:login' %}" class="btn btn-primary mb-4">ログインはこちら</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary mb-4">ログインはこちら</a>
+            {% endif %}
         </div>
     </div>
 </div>
